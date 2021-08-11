@@ -46,10 +46,10 @@ Create a Makefile with a rule named ```unit-test``` which compiles your code wit
 make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-driver.cpp``` (it has no dependencies except ```unit_tests.h```). For example:
 
 ```bash
-GCC: clang++
+CXX: clang++
 
 unit-test: unit_tests.h unit-test-driver.cpp
-    $(GCC) unit-test-driver.cpp
+    $(CXX) unit-test-driver.cpp
 ```
 
 ## Run Your Tests!
