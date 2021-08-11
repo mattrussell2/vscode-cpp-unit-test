@@ -35,7 +35,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://www.github.com/mattrussell2/vscode-cpp-unit-test"
+		"url": "https://www.github.com/mattrussell2/vscode-cpp-unit-test"
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

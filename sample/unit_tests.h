@@ -1,21 +1,19 @@
 #include <cassert>
 #include <iostream>
 
-// TESTSET PASS
 void test_pass() {
     assert(0 == 0);
 }
 
-void test_pass_0() {
-    assert(1 == 1);
+void test_pass_1() {
+    int* x = new int[100];
+    delete[] x;
 }
 
-// TESTSET FAIL
 void test_fail() {
-    assert(0 == 1);
+    assert(1 == 0);
 }
 
-// VALGRIND FAIL
-void valgrind_fail() {
+void test_fail_valgrind() {
     int* x = new int[100];
 }
