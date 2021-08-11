@@ -56,8 +56,9 @@ void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL
 
 ```assert``` statements are encouraged!
 
-Each test will effectively be run as its own 'main' by a driver that the extension creates for you.
-However, you'll need to do a small bit of work to setup the Makefile.
+Each test will effectively be run as its own 'main' by a driver that the extension creates for you. Valgrind will also be run on the test - it will fail if the main test fails or if valgrind fails (valgrind is run with --leak-check=full and --show-leak-kinds=all).
+
+The last thing to do is to set up the Makefile.
 
 ## Makefile
 Your ```Makefile``` will need a rule named ```unit-test``` which compiles your code with a file named ```unit-test-driver.cpp```. If you'd like to separate compilation and linking, that's fine, just make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-driver.cpp``` (it has no dependencies except ```unit_tests.h```). The below example will work fine for now.
