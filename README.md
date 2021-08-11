@@ -55,9 +55,19 @@ unit-test: unit_tests.h unit-test-driver.cpp
 ## Run Your Tests!
 You'll see in your ```unit_tests.h``` file the buttons to run you tests. If you'd like to make groupings so they don't all run, include a comment of the form: 
 
-![image](./unit_test_img.png)
+![image](./images/unit_test_img.png)
+
+Here is the output of running the tests!
+
+![image](./images/unit_test_img.png)
 
 You can run each test individually, or head to the 'test explorer panel, where there is a button to run all tests. 
+
+Alternatively, you can create groups with a comment above the first test in a group as follows:
+
+// TEST GROUP SOMENAME 
+
+Note: this last part still needs some debugging. 
 
 That's it! Happy testing :)
 
