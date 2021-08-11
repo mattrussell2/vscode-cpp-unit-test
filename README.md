@@ -65,9 +65,13 @@ You can run each test individually, or head to the 'test explorer panel, where t
 
 ![image](./images/unit_test_testing_panel.png)
 
-Alternatively, you can create groups with a comment above the first test in a group as follows:
+Alternatively, you can create test groups with a comment above the first test in a group as follows:
 
 // TEST GROUP SOMENAME 
+
+The "// TEST GROUP" part of the string is necessary, but anything after that will work.
+
+![image](./images/test_groups.png)
 
 Note: this last part still needs some debugging. 
 
