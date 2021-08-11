@@ -1,4 +1,4 @@
-gcc: clang++
+GCC: clang++
 
-unit-test: test.h unit-test-driver.cpp
+unit-test: unit_tests.h unit-test-driver.cpp
 	$(GCC) unit-test-driver.cpp
