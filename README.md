@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Test Provider Sample
 
 This sample demonstrates usage of the Test Provider API. It looks for tests as additions in `.md` files, with heading as groups, for example:
@@ -24,3 +25,7 @@ todo
 	- Start a task `npm: watch` to compile the code
 	- Run the extension in a new VS Code window
 - Create a `test.md` file containing the given content
+=======
+# vscode-cpp-unit-test
+A simple and sweet VSCode extension to unit test C++ code.
+>>>>>>> 1028d7cbad61b81f82d91187a5ce807c77e7499e
