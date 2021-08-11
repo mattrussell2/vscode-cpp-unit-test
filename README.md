@@ -10,7 +10,7 @@ To use the extension, you'll need to:
 ###NOTE: We're still in alpha, so setup is a bit finicky. Please follow these instructions carefully!
 
 ### Getting started
-If you haven't already, install the C++ Unit Testing FrameWork by AutumMoon from the VSCode Marketplace. 
+If you haven't already, install the C++ Unit Testing Framework by AutumMoon from the VSCode Marketplace. 
 
 Then, create and move into a new folder. 
 
@@ -77,7 +77,7 @@ Navigate back to ```unit_tests.h```. You should see 'play' buttons next to each 
 
 ![image](./images/unit_test_img.png)
 
-You can press each one to run the tests!
+Press each one to play its test!
 
 ![image](./images/unit_test_output.png)
 
@@ -96,3 +96,5 @@ The ```// TEST GROUP``` part of the string is necessary, but anything after that
 That's it! Happy testing :)
 
 Matt
+
+Attribution: this framwork was largely developed through 
