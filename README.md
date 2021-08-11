@@ -5,7 +5,6 @@ A simple and sweet VSCode extension to unit test C++ code.
 To use the extension, you'll need to:
 1) Create a unit_tests.h file
 2) Set up your Makefile
-3) Run 'code' 
 3) Start testing your code! 
 
 ###NOTE: We're still in alpha, so setup is a bit finicky. Please follow these instructions carefully!
