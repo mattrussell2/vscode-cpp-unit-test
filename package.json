@@ -1,0 +1,57 @@
+{
+	"name": "cpp-unit-test",
+	"displayName": "C++ Unit Testing Framework",
+	"description": "C++ Unit Testing Framework",
+	"enableProposedApi": true,
+	"version": "0.0.1",
+	"publisher": "mrussell",
+	"engines": {
+		"vscode": "^1.59.0-20210722"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"workspaceContains:*.md"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "test-provider-sample.runTests",
+				"title": "Custom Run Tests"
+			}
+		]
+	},
+	"workspaceTrust": {
+		"request": "onDemand",
+		"description": "Trust is required to execute tests in the workspace."
+	},
+	"prettier": {
+		"printWidth": 100,
+		"singleQuote": true,
+		"tabWidth": 2,
+		"arrowParens": "avoid"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://www.github.com/mattrussell2/vscode-cpp-unit-test"
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint . --ext .ts,.tsx",
+		"watch": "tsc -watch -p ./",
+		"download-api": "vscode-dts dev",
+		"postdownload-api": "vscode-dts main",
+		"postinstall": "npm run download-api"
+	},
+	"devDependencies": {
+		"@types/node": "^12.12.0",
+		"@typescript-eslint/eslint-plugin": "^4.16.0",
+		"@typescript-eslint/parser": "^4.16.0",
+		"eslint": "^7.21.0",
+		"typescript": "^4.2.2",
+		"vscode-dts": "^0.3.1"
+	}
+}
