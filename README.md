@@ -24,15 +24,15 @@ For instance, your ```unit_tests.h``` file might read:
 #include <iostream>
 
 void test_pass() {
-	assert(0 == 0);
+    assert(0 == 0);
 }
 
 void test_fail()) {
-	assert(1 == 0);
+    assert(1 == 0);
 }
 
 void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL
-	int *x = new int[100];
+    int *x = new int[100];
 }
 ```
 
@@ -49,7 +49,7 @@ make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-dr
 GCC: clang++
 
 unit-test: unit_tests.h unit-test-driver.cpp
-	$(GCC) unit-test-driver.cpp
+    $(GCC) unit-test-driver.cpp
 ```
 
 ## Run Your Tests!
@@ -72,7 +72,7 @@ void test_pass() {
 
 // TEST GROUP FAIL :(
 void test_fail()) {
-	assert(1 == 0);
+    assert(1 == 0);
 }
 ```
 
