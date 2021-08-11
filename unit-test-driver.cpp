@@ -24,10 +24,7 @@
     int main(int argc, char **argv) {
 
         /* will be filled in by the unit_test script */
-        std::map<std::string, FnPtr> tests {	{ "test_pass", test_pass },
-	{ "test_pass_1", test_pass_1 },
-	{ "test_fail", test_fail },
-	{ "test_fail_valgrind", test_fail_valgrind },
+        std::map<std::string, FnPtr> tests {	{ "test2", test2 },
 
         };
 
