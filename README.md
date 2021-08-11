@@ -8,12 +8,30 @@ To use the extension, you'll need to:
 3) Run 'code' 
 3) Start testing your code! 
 
+###NOTE: We're still in alpha, so setup is a bit finicky. Please follow these instructions carefully!
+
+### Getting started
+If you haven't already, install the C++ Unit Testing FrameWork by AutumMoon from the VSCode Marketplace. 
+
+Then, create and move into a new folder. 
+
+```mkdir unittest_demo && cd unittest_demo```
+
+Now, create a Makefile and unit_tests.h file:
+
+```touch Makefile unit_tests.h```
+
+Wonderful! Now, open this folder in a new workspace:
+
+```code .```
+
+If you see the testing panel open on the left-hand window, like in the image below then you're good to go! If not, just restart your VSCode instance, cd to the directory you just created, and again run ```code .```
+
+![image](./images/left-hand-side.png)
 
 ### unit_tests.h
 
-Create a file named ```unit_tests.h``` in the directory with your code. 
-
-This file will hold test functions, each of which:
+Now, we'll edit ```unit_tests.h``` This file will hold your test functions, each of which:
 
 1) returns ```void```
 2) takes no arguments
@@ -43,8 +61,7 @@ Each test will effectively be run as its own 'main' by a driver that the extensi
 However, you'll need to do a small bit of work to setup the Makefile.
 
 ## Makefile
-Create a Makefile with a rule named ```unit-test``` which compiles your code with a file named ```unit-test-driver.cpp```. If you'd like to separate compilation and linking, that's fine, just
-make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-driver.cpp``` (it has no dependencies except ```unit_tests.h```). For example:
+Your ```Makefile``` will need a rule named ```unit-test``` which compiles your code with a file named ```unit-test-driver.cpp```. If you'd like to separate compilation and linking, that's fine, just make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-driver.cpp``` (it has no dependencies except ```unit_tests.h```). The below example will work fine for now.
 
 ```bash
 CXX: clang++
@@ -52,23 +69,23 @@ CXX: clang++
 unit-test: unit_tests.h unit-test-driver.cpp
     $(CXX) unit-test-driver.cpp
 ```
-## Run 'code'
-Once the `unit_tests.h` and `Makefile` are both in your cwd, run the command ```code .```. This should open a new VSCode window, and things should work smoothly. Looking to fix this part up to be more intuitive - any suggestions are welcome!
+## Save!
+Make sure you've saved both files.
 
 ## Run Your Tests!
-You'll see in your ```unit_tests.h``` file the buttons to run you tests. If you'd like to make groupings so they don't all run, include a comment of the form: 
+Navigate back to ```unit_tests.h```. You should see 'play' buttons next to each test declaration. 
 
 ![image](./images/unit_test_img.png)
 
-Here is the output of running the tests!
+You can press each one to run the tests!
 
 ![image](./images/unit_test_output.png)
 
-You can run each test individually, or head to the 'test explorer panel, where there is a button to run all tests. 
+You can also head to the 'test explorer panel, where there is an overview of all tests, and a button to run all tests together. 
 
 ![image](./images/unit_test_testing_panel.png)
 
-Alternatively, you can create test groups with a comment above the first test in a group as follows:
+You can also create test groups with a comment above the first test in a group as follows:
 
 ```// TEST GROUP SOMENAME ```
 
