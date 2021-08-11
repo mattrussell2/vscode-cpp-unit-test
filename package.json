@@ -2,9 +2,9 @@
 	"name": "cpp-unit-test",
 	"displayName": "C++ Unit Testing Framework",
 	"description": "C++ Unit Testing Framework",
-	"enableProposedApi": true,
+	"enableProposedApi": false,
 	"version": "0.0.1",
-	"publisher": "mrussell",
+	"publisher": "AutumnMoon",
 	"engines": {
 		"vscode": "^1.59.0-20210722"
 	},
