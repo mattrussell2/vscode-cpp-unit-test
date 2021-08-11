@@ -73,8 +73,6 @@ The "// TEST GROUP" part of the string is necessary, but anything after that wil
 
 ![image](./images/test_groups.png)
 
-Note: this last part still needs some debugging. 
-
 That's it! Happy testing :)
 
 Matt
