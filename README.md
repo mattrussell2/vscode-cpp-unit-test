@@ -14,9 +14,8 @@ Create a file named ```unit_tests.h``` in the directory with your code.
 
 This file will hold test functions, each of which:
 
-	a) returns ```void```
-
-	b) takes no arguments
+1) returns ```void```
+2) takes no arguments
 
 For instance, your ```unit_tests.h``` file might read:
 
