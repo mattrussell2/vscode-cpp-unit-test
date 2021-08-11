@@ -24,14 +24,14 @@ For instance, your ```unit_tests.h``` file might read:
 #include <iostream>
 
 void test_pass() {
-    assert(0 == 0);
+	assert(0 == 0);
 }
 
 void test_fail()) {
 	assert(1 == 0);
 }
 
-void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL.
+void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL
 	int *x = new int[100];
 }
 ```
@@ -43,7 +43,14 @@ However, you'll need to do a small bit of work to setup the Makefile.
 
 ## Makefile
 Create a Makefile with a rule named ```unit-test``` which compiles your code with a file named ```unit-test-driver.cpp```. If you'd like to separate compilation and linking, that's fine, just
-make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-driver.cpp``` (it has no dependencies except ```unit_tests.h```).
+make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-driver.cpp``` (it has no dependencies except ```unit_tests.h```). For example:
+
+```bash
+GCC: clang++
+
+unit-test: unit_tests.h unit-test-driver.cpp
+	$(GCC) unit-test-driver.cpp
+```
 
 ## Run Your Tests!
 You'll see in your ```unit_tests.h``` file the buttons to run you tests. If you'd like to make groupings so they don't all run, include a comment of the form: 
