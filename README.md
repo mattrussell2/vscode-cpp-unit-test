@@ -30,7 +30,7 @@ If you see the testing panel open on the left-hand window, like in the image bel
 
 ### unit_tests.h
 
-Now, we'll edit ```unit_tests.h``` This file will hold your test functions, each of which:
+Now, we'll edit ```unit_tests.h```. This file will hold your test functions, each of which:
 
 1) returns ```void```
 2) takes no arguments
