@@ -1,11 +1,31 @@
 import * as vscode from 'vscode';
-import { getContentFromFilesystem, TestData, TestCase, testData, TestFile } from './testTree';
-import { generateDriver, cleanup } from './driverUtils';
-import { promises } from 'dns';
+import { TestCase, testData, TestFile } from './testTree';
+import { generateDriver, cleanup, writeLocalFile } from './driverUtils';
 
 export async function activate(context: vscode.ExtensionContext) {
   const ctrl = vscode.tests.createTestController('TestController', 'Test');
   context.subscriptions.push(ctrl);  
+
+  const disposable = vscode.commands.registerCommand('cpp-unit-test.init', () => {
+		// The code you place here will be executed every time your command is executed
+                
+    if (!vscode.workspace.findFiles("./Makefile")) {
+      writeLocalFile(`CXX: clang++
+                      unit-test: unit_tests.h unit-test-driver.cpp
+                      \t$(CXX) unit-test-driver.cpp"`, "Makefile");
+    }
+    if (!vscode.workspace.findFiles("./unit_tests.h")) {
+      writeLocalFile(`#include <cassert>
+        #include <iostream>
+        
+        void test_pass() {
+            assert(0 == 0);
+        }`,"unit_tests.h");
+    }
+		
+	});
+
+	context.subscriptions.push(disposable);
 
   const runHandler = (request: vscode.TestRunRequest, cancellation: vscode.CancellationToken) => {
     const queue: { test: vscode.TestItem; data: TestCase }[] = [];

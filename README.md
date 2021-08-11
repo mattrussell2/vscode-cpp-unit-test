@@ -5,6 +5,7 @@ A simple and sweet VSCode extension to unit test C++ code.
 To use the extension, you'll need to:
 1) Create a unit_tests.h file
 2) Set up your Makefile
+3) Run 'code' 
 3) Start testing your code! 
 
 
@@ -51,6 +52,8 @@ CXX: clang++
 unit-test: unit_tests.h unit-test-driver.cpp
     $(CXX) unit-test-driver.cpp
 ```
+## Run 'code'
+Once the unit_tests.h and Makefile are both in your cwd, run the command ```code .```. This should open a new VSCode window, and things should work smoothly. Looking to fix this part up to be more intuitive - any suggestions are welcome!
 
 ## Run Your Tests!
 You'll see in your ```unit_tests.h``` file the buttons to run you tests. If you'd like to make groupings so they don't all run, include a comment of the form: 

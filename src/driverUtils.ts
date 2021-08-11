@@ -2,16 +2,34 @@ import * as vscode from 'vscode';
 import { TextEncoder } from 'util';
 import { posix } from 'path';
 import { TestCase } from './testTree';
+import { url } from 'inspector';
 const driverFileName = "unit-test-driver.cpp";
 const utestExecName = "a.out";
 
-function getCwd() {
+
+export const writeLocalFile = async function(filecontents:string, filename:string) {
+    let sendback: { [index: string]: vscode.Uri };
+
+    const folderUri = getCwdUri();     
+    if (!folderUri) { return null; }   
+    const fileUri = getFileUri(folderUri, filename);
+    var enc = new TextEncoder();
+    var encodedDriverContents = enc.encode(filecontents);
+    return await vscode.workspace.fs.writeFile(fileUri, encodedDriverContents);                
+};
+
+export function getFileUri(folderUri:vscode.Uri, filename:string) {
+    return folderUri.with({ path: posix.join(folderUri.path, filename) });
+}
+
+
+export function getCwdUri() {
     if (!vscode.workspace.workspaceFolders) {
         vscode.window.showInformationMessage('No folder or workspace opened');
         return;
     } 
     return vscode.workspace.workspaceFolders[0].uri;
-  }
+}
 
 export const generateDriver = async function(queue:{ test: vscode.TestItem; data: TestCase }[]) {
     // create unit-test-driver.cpp and auto-populate it
@@ -79,29 +97,27 @@ export const generateDriver = async function(queue:{ test: vscode.TestItem; data
     const firstPart = driverContents.slice(0,insertLocation).join("\n");
     const secondPart = driverContents.slice(insertLocation, driverContents.length).join("\n");    
     const finalDriverContents = firstPart + testPairs + secondPart;
-
-    console.log(finalDriverContents);
-            
-    const folderUri = getCwd();     
-    if (!folderUri) { return; }   
-    const fileUri = folderUri.with({ path: posix.join(folderUri.path, driverFileName) });
-    var enc = new TextEncoder();
-    var encodedDriverContents = enc.encode(finalDriverContents); 
-    await vscode.workspace.fs.writeFile(fileUri, encodedDriverContents);            
     
+    const folderUri = getCwdUri();     
+    if (!folderUri) { return; }
+    await writeLocalFile(finalDriverContents, driverFileName);
+           
     // let's run make after parsing the test file.    
     let makeResult = await execShellCommand('make unit-test', {cwd: folderUri.fsPath});
-    if (makeResult.passed) {
+    if (makeResult.passed) {        
+        const fileUri = getFileUri(folderUri,driverFileName);     
         vscode.workspace.fs.delete(fileUri);  
     }              
 };
               
 export const cleanup = async function() {        
-    const folderUri = getCwd();
+    const folderUri = getCwdUri();
     if (!folderUri) { return; }
-    const fileUri = folderUri.with({ path: posix.join(folderUri.path, utestExecName ) });
+    const fileUri = getFileUri(folderUri, utestExecName);
     vscode.workspace.fs.delete(fileUri);           
 };
+
+
 
 export const execShellCommand = async function(cmd:string, fsPathDict:Object={}):Promise<any> {
     const exec = require('child_process').exec;

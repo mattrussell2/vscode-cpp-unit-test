@@ -3,7 +3,7 @@
 	"displayName": "C++ Unit Testing Framework",
 	"description": "C++ Unit Testing Framework",
 	"enableProposedApi": false,
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "AutumnMoon",
 	"engines": {
 		"vscode": "^1.59.0-20210722"
@@ -12,7 +12,13 @@
 		"Other"
 	],
 	"activationEvents": [
-		"workspaceContains:unit_tests.h"
+		"workspaceContains:**/unit_tests.h"
+	],
+	"commands": [
+		{
+			"command": "cpp-unit-test.init",
+			"title": "Initialize C++ Unit Test Files in Current Workspace"
+		}
 	],
 	"main": "./out/extension.js",
 	"workspaceTrust": {
