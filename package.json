@@ -12,17 +12,9 @@
 		"Other"
 	],
 	"activationEvents": [
-		"workspaceContains:*.md"
+		"workspaceContains:unit_tests.h"
 	],
 	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "test-provider-sample.runTests",
-				"title": "Custom Run Tests"
-			}
-		]
-	},
 	"workspaceTrust": {
 		"request": "onDemand",
 		"description": "Trust is required to execute tests in the workspace."
