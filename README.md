@@ -7,7 +7,7 @@ To use the extension, you'll need to:
 2) Set up your Makefile
 3) Start testing your code! 
 
-###NOTE: We're still in alpha, so setup is a bit finicky. Please follow these instructions carefully!
+###NOTE: Please follow these instructions carefully!
 
 ### Getting started
 If you haven't already, [install the C++ Unit Testing Framework by AutumMoon from the VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=AutumnMoon.cpp-unit-test). 
@@ -24,7 +24,7 @@ Wonderful! Now, open this folder in a new workspace:
 
 ```code .```
 
-If you see the testing panel open on the left-hand window, like in the image below then you're good to go! If not, just restart your VSCode instance, cd to the directory you just created, and again run ```code .```
+If you see the testing panel open on the left-hand window, like in the image below then you're good to go! If not, just restart your VSCode instance, cd to the directory you just created, and again run ```code .``` The reason for this is that the extension will only activate if you have a file named ```unit_tests.h``` in your workspace on launch of the VSCode instance (i.e. running ```code .```), which will minimize the extension's footprint in other contexts. Once the extension is loaded in your VSCode workspace, it will recompile your code automatically as you add / remove test cases.
 
 ![image](./images/left-hand-side.png)
 
