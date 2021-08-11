@@ -53,7 +53,7 @@ unit-test: unit_tests.h unit-test-driver.cpp
     $(CXX) unit-test-driver.cpp
 ```
 ## Run 'code'
-Once the unit_tests.h and Makefile are both in your cwd, run the command ```code .```. This should open a new VSCode window, and things should work smoothly. Looking to fix this part up to be more intuitive - any suggestions are welcome!
+Once the `unit_tests.h` and `Makefile` are both in your cwd, run the command ```code .```. This should open a new VSCode window, and things should work smoothly. Looking to fix this part up to be more intuitive - any suggestions are welcome!
 
 ## Run Your Tests!
 You'll see in your ```unit_tests.h``` file the buttons to run you tests. If you'd like to make groupings so they don't all run, include a comment of the form: 
