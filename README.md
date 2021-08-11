@@ -12,9 +12,11 @@ To use the extension, you'll need to:
 
 Create a file named ```unit_tests.h``` in the directory with your code. 
 
-This file will hold tests of the form:
-	a) return ```void```
-	b) take no arguments
+This file will hold test functions, each of which:
+
+	a) returns ```void```
+
+	b) takes no arguments
 
 For instance, your ```unit_tests.h``` file might read:
 
@@ -37,6 +39,8 @@ void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL.
 
 ```assert``` statements are encouraged!
 
+Each test will effectively be run as its own 'main' by a driver that the extension creates for you.
+However, you'll need to do a small bit of work to setup the Makefile.
 
 ## Makefile
 Create a Makefile with a rule named ```unit-test``` which compiles your code with a file named ```unit-test-driver.cpp```. If you'd like to separate compilation and linking, that's fine, just
