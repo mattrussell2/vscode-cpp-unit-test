@@ -96,5 +96,3 @@ The ```// TEST GROUP``` part of the string is necessary, but anything after that
 That's it! Happy testing :)
 
 Matt
-
-Attribution: this framwork was largely developed through 
