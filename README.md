@@ -10,7 +10,7 @@ To use the extension, you'll need to:
 ###NOTE: We're still in alpha, so setup is a bit finicky. Please follow these instructions carefully!
 
 ### Getting started
-If you haven't already, install the C++ Unit Testing Framework by AutumMoon from the VSCode Marketplace. 
+If you haven't already, [install the C++ Unit Testing Framework by AutumMoon from the VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=AutumnMoon.cpp-unit-test). 
 
 Then, create and move into a new folder. 
 
