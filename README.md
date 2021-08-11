@@ -63,7 +63,7 @@ Here is the output of running the tests!
 
 You can run each test individually, or head to the 'test explorer panel, where there is a button to run all tests. 
 
-![image](./images/unit_test_testing_panel)
+![image](./images/unit_test_testing_panel.png)
 
 Alternatively, you can create groups with a comment above the first test in a group as follows:
 
