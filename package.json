@@ -12,11 +12,11 @@
 		"Other"
 	],
 	"activationEvents": [
-		"workspaceContains:**/unit_tests.h"
+		"workspaceContains:**/*unit_tests.h"
 	],
 	"commands": [
 		{
-			"command": "cpp-unit-test.init",
+			"command": "cpp-unit-test.unit_test_init",
 			"title": "Initialize C++ Unit Test Files in Current Workspace"
 		}
 	],

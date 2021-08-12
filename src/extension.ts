@@ -3,10 +3,8 @@ import { TestCase, testData, TestFile } from './testTree';
 import { generateDriver, cleanup, writeLocalFile } from './driverUtils';
 
 export async function activate(context: vscode.ExtensionContext) {
-  const ctrl = vscode.tests.createTestController('TestController', 'Test');
-  context.subscriptions.push(ctrl);  
-
-  const disposable = vscode.commands.registerCommand('cpp-unit-test.init', () => {
+  
+  const disposable = vscode.commands.registerCommand('cpp-unit-test.unit_test_init', () => {
 		// The code you place here will be executed every time your command is executed
                 
     if (!vscode.workspace.findFiles("./Makefile")) {
@@ -26,6 +24,9 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
+
+  const ctrl = vscode.tests.createTestController('TestController', 'Test');
+  context.subscriptions.push(ctrl);  
 
   const runHandler = (request: vscode.TestRunRequest, cancellation: vscode.CancellationToken) => {
     const queue: { test: vscode.TestItem; data: TestCase }[] = [];
