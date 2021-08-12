@@ -96,3 +96,5 @@ The ```// TEST GROUP``` part of the string is necessary, but anything after that
 That's it! Happy testing :)
 
 Matt
+
+PS: Many thanks to [https://github.com/microsoft/vscode-extension-samples](https://github.com/microsoft/vscode-extension-samples) for having some great examples to work from!
