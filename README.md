@@ -97,4 +97,4 @@ That's it! Happy testing :)
 
 Matt
 
-PS: Many thanks to [https://github.com/microsoft/vscode-extension-samples] for having some great examples to work from!
+PS: Many thanks to [https://github.com/microsoft/vscode-extension-samples](https://github.com/microsoft/vscode-extension-samples) for having some great examples to work from!
