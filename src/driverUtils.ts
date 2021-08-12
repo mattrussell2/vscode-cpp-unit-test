@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { TextEncoder } from 'util';
 import { posix } from 'path';
 import { TestCase } from './testTree';
-import { url } from 'inspector';
-const driverFileName = "unit-test-driver.cpp";
+
+const driverFileName = "unit_test_driver.cpp";
 const utestExecName = "a.out";
 
 

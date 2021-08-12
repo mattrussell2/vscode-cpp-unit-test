@@ -9,8 +9,8 @@ export async function activate(context: vscode.ExtensionContext) {
                 
     if (!vscode.workspace.findFiles("./Makefile")) {
       writeLocalFile(`CXX: clang++
-                      unit-test: unit_tests.h unit-test-driver.cpp
-                      \t$(CXX) unit-test-driver.cpp"`, "Makefile");
+                      unit_test: unit_tests.h unit_test_driver.cpp
+                      \t$(CXX) unit_test_driver.cpp"`, "Makefile");
     }
     if (!vscode.workspace.findFiles("./unit_tests.h")) {
       writeLocalFile(`#include <cassert>

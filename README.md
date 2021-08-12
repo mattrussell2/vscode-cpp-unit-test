@@ -61,13 +61,13 @@ Each test will effectively be run as its own 'main' by a driver that the extensi
 The last thing to do is to set up the Makefile.
 
 ## Makefile
-Your ```Makefile``` will need a rule named ```unit-test``` which compiles your code with a file named ```unit-test-driver.cpp```. This is a custom driver file built by the extension that includes a ```main``` function. If you'd like to separate compilation and linking, that's fine, just make sure you have a rule to build ```unit-test-driver.o``` from ```unit-test-driver.cpp``` (it has no dependencies except ```unit_tests.h```). 
+Your ```Makefile``` will need a rule named ```unit_test``` which compiles your code with a file named ```unit_test_driver.cpp```. This is a custom driver file built by the extension that includes a ```main``` function. If you'd like to separate compilation and linking, that's fine, just make sure you have a rule to build ```unit_test_driver.o``` from ```unit_test_driver.cpp``` (it has no dependencies except ```unit_tests.h```). 
 
 ```bash
 CXX: clang++
 
-unit-test: unit_tests.h unit-test-driver.cpp
-    $(CXX) unit-test-driver.cpp
+unit_test: unit_tests.h unit_test_driver.cpp
+    $(CXX) unit_test_driver.cpp
 ```
 ## Save!
 Make sure you've saved both files.
