@@ -2,10 +2,34 @@ import * as vscode from 'vscode';
 import { TextEncoder } from 'util';
 import { posix } from 'path';
 import { TestCase } from './testTree';
+import { exit } from 'process';
 
-const driverFileName = "unit_test_driver.cpp";
-const utestExecName = "a.out";
+function getConfiguration(configtype : string) : {[key : string] : string}  {
+    const uTestConfig = vscode.workspace.getConfiguration('cpp-unit-test');
+    const config : {[key : string] : string} | undefined = uTestConfig.get(configtype);
+    if (config === undefined) { console.log("NEED TO DEFINE " + configtype + " CONFIG"); exit(1); }
+    return config; 
+}
 
+export function getCleanUpExecutableOnBuild() : string {
+    return getConfiguration('build')['cleanUpExecutableOnBuild'];  
+}
+
+export function getDriverCleanUpOnBuild() : string {
+    return getConfiguration('build')['cleanUpDriverOnBuild'];
+}
+
+export function getDriverFilename() : string {
+    return getConfiguration('makefile')["driverFilename"];    
+}
+
+export function getExecutableFilename() : string {
+    return getConfiguration('makefile')["executableFilename"];    
+}
+
+export function getMakefileTarget() : string {
+    return getConfiguration('makefile')["targetName"];    
+}
 
 export const writeLocalFile = async function(filecontents:string, filename:string) {
     let sendback: { [index: string]: vscode.Uri };
@@ -31,7 +55,7 @@ export function getCwdUri() {
     return vscode.workspace.workspaceFolders[0].uri;
 }
 
-export const generateDriver = async function(queue:{ test: vscode.TestItem; data: TestCase }[]) {
+export const generateDriver = async function(queue:{ test: vscode.TestItem; data: TestCase }[]) : Promise<void | null> {
     // create unit-test-driver.cpp and auto-populate it
     let driverContents = `
     /*
@@ -90,33 +114,24 @@ export const generateDriver = async function(queue:{ test: vscode.TestItem; data
         }
     });
 
-    if (insertLocation === -1){
-        console.log("something failed while building driver.");
-        return;
+    if (insertLocation === -1){        
+        return Promise.resolve(null);
     }    
-    const firstPart = driverContents.slice(0,insertLocation).join("\n");
+    const firstPart = driverContents.slice(0, insertLocation).join("\n");
     const secondPart = driverContents.slice(insertLocation, driverContents.length).join("\n");    
     const finalDriverContents = firstPart + testPairs + secondPart;
     
-    const folderUri = getCwdUri();     
-    if (!folderUri) { return; }
-    await writeLocalFile(finalDriverContents, driverFileName);
-           
-    // let's run make after parsing the test file.    
-    let makeResult = await execShellCommand('make unit-test', {cwd: folderUri.fsPath});
-    if (makeResult.passed) {        
-        const fileUri = getFileUri(folderUri,driverFileName);     
-        vscode.workspace.fs.delete(fileUri);  
-    }              
+    return await writeLocalFile(finalDriverContents, getDriverFilename() );                        
 };
               
-export const cleanup = async function() {        
-    const folderUri = getCwdUri();
-    if (!folderUri) { return; }
-    const fileUri = getFileUri(folderUri, utestExecName);
-    vscode.workspace.fs.delete(fileUri);           
+export const cleanup = async function() {   
+    if (getCleanUpExecutableOnBuild()){     
+        const folderUri = getCwdUri();
+        if (!folderUri) { return; }
+        const fileUri = getFileUri(folderUri, getExecutableFilename());
+        vscode.workspace.fs.delete(fileUri);    
+    }       
 };
-
 
 
 export const execShellCommand = async function(cmd:string, fsPathDict:Object={}):Promise<any> {

@@ -1,4 +1,4 @@
 CXX: clang++
 
-unit-test: unit_tests.h unit-test-driver.cpp
-	$(CXX) unit-test-driver.cpp
+unit_test:
+	$(CXX) unit_test_driver.cpp

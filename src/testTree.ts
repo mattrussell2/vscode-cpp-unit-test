@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 import { parseTestsFile } from './parser';
 import { join } from 'path';
-import { execShellCommand } from './driverUtils';
+import { execShellCommand, getExecutableFilename } from './driverUtils';
 
 const textDecoder = new TextDecoder('utf-8');
 
@@ -97,34 +97,30 @@ export class TestCase {
     return `${this.name}`;
   }
 
-  async run(item: vscode.TestItem, options: vscode.TestRun):Promise<void> {
-    const start = Date.now();    
-    if (!vscode.workspace.workspaceFolders) {
-      vscode.window.showInformationMessage('No folder or workspace opened');
-      return;
-    }
-      let wsFolderUri = vscode.workspace.workspaceFolders[0].uri.fsPath;
-      let execPath = join(wsFolderUri, 'a.out');      
+    async run(item: vscode.TestItem, options: vscode.TestRun):Promise<void> {
+        const start = Date.now();    
+        if (!vscode.workspace.workspaceFolders) {
+            vscode.window.showInformationMessage('No folder or workspace opened');
+            return;
+        }
+        let wsFolderUri = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        let execPath = join(wsFolderUri, getExecutableFilename());      
 
-      let result = await execShellCommand(execPath + ' ' + this.name);   
-      const duration = Date.now() - start;
-      if (!result.passed) {                   
-        let message = new vscode.TestMessage(result.stderr); 
-        message.location = new vscode.Location(item.uri!, item.range!);
-        options.failed(item, message, duration);
-      }else {
-        console.log("result passed");  
-        
-        let valgrindResult = await execShellCommand('valgrind --leak-check=full --show-leak-kinds=all --error-exitcode=1 ' + execPath + ' ' + this.name);
-        console.log(valgrindResult.stderr);
-        console.log(valgrindResult.stdout);
-        if (!valgrindResult.passed) {                             
-          let message = new vscode.TestMessage(valgrindResult.stderr); 
-          message.location = new vscode.Location(item.uri!, item.range!);
-          options.failed(item, message, duration);
-        }else {
-          options.passed(item, duration);
-        }        
-      } 
-  }
+        let result = await execShellCommand(execPath + ' ' + this.name);   
+        const duration = Date.now() - start;
+        if (!result.passed) {                   
+            let message = new vscode.TestMessage(result.stderr); 
+            message.location = new vscode.Location(item.uri!, item.range!);
+            options.failed(item, message, duration);
+        }else {       
+            let valgrindResult = await execShellCommand('valgrind --leak-check=full --show-leak-kinds=all --error-exitcode=1 ' + execPath + ' ' + this.name);        
+            if (!valgrindResult.passed) {                             
+                let message = new vscode.TestMessage(valgrindResult.stderr); 
+                message.location = new vscode.Location(item.uri!, item.range!);
+                options.failed(item, message, duration);
+            }else {
+                options.passed(item, duration);
+            }        
+        } 
+    }
 }  

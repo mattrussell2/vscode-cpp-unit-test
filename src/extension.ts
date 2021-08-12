@@ -1,29 +1,11 @@
 import * as vscode from 'vscode';
 import { TestCase, testData, TestFile } from './testTree';
-import { generateDriver, cleanup, writeLocalFile } from './driverUtils';
+import { generateDriver, cleanup, execShellCommand, getFileUri, 
+         getMakefileTarget, getDriverFilename, getCwdUri, 
+         getDriverCleanUpOnBuild } from './driverUtils';
+import { exit } from 'process';
 
-export async function activate(context: vscode.ExtensionContext) {
-  
-  const disposable = vscode.commands.registerCommand('cpp-unit-test.unit_test_init', () => {
-		// The code you place here will be executed every time your command is executed
-                
-    if (!vscode.workspace.findFiles("./Makefile")) {
-      writeLocalFile(`CXX: clang++
-                      unit_test: unit_tests.h unit_test_driver.cpp
-                      \t$(CXX) unit_test_driver.cpp"`, "Makefile");
-    }
-    if (!vscode.workspace.findFiles("./unit_tests.h")) {
-      writeLocalFile(`#include <cassert>
-        #include <iostream>
-        
-        void test_pass() {
-            assert(0 == 0);
-        }`,"unit_tests.h");
-    }
-		
-	});
-
-	context.subscriptions.push(disposable);
+export async function activate(context: vscode.ExtensionContext) {  
 
   const ctrl = vscode.tests.createTestController('TestController', 'Test');
   context.subscriptions.push(ctrl);  
@@ -52,18 +34,54 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     };    
 
-    const runTestQueue = async () => {
-        await generateDriver(queue);            
-        for (const { test, data } of queue) {        
-        run.appendOutput(`Running ${test.id}\r\n`);
-        console.log(test.id);
-        if (cancellation.isCancellationRequested) {          
-            run.skipped(test);
-        } else {
-            run.started(test);
-            await data.run(test, run);          
+    const runMake = async function() : Promise<string> {   
+        const folderUri = getCwdUri();     
+        if (!folderUri) { return "failed"; }        
+    
+      // let's run make after parsing the test file.  
+        let makeResult = await execShellCommand('make ' + getMakefileTarget(), {cwd: folderUri.fsPath});
+        
+        if (getDriverCleanUpOnBuild()) {
+            const fileUri = getFileUri(folderUri, getDriverFilename() );     
+            vscode.workspace.fs.delete(fileUri);  
         }
-        run.appendOutput(`Completed ${test.id}\r\n`);        
+        if (makeResult.passed) {                    
+            return "passed";
+        }else {
+            return makeResult.stderr;
+        }          
+    };
+
+    const runTestQueue = async () => {
+        await generateDriver(queue);   
+        const makeResult = await runMake();
+
+        if (makeResult !== "passed") {            
+            run.appendOutput(`Compilation Failed\r\n`);
+            const data = new TestCase("compilation", 0);
+            const id = `${queue[0].test.uri}/${"data.getLabel()"}`;        
+    
+            const tcase = ctrl.createTestItem(id, data.getLabel(), queue[0].test.uri);
+            testData.set(tcase, data);
+            run.started(tcase);
+            let message = new vscode.TestMessage(makeResult); 
+            message.location = new vscode.Location(queue[0].test.uri!, queue[0].test.range!);
+            run.failed(queue[0].test, message, 0);
+            run.end();
+            exit(1);
+        }
+       
+        
+        for (const { test, data } of queue) {        
+            run.appendOutput(`Running ${test.id}\r\n`);
+            console.log(test.id);
+            if (cancellation.isCancellationRequested) {          
+                run.skipped(test);
+            } else {
+                run.started(test);
+                await data.run(test, run);          
+            }
+            run.appendOutput(`Completed ${test.id}\r\n`);        
         }
         console.log("about to end run");      
         run.end();
@@ -161,21 +179,3 @@ function startWatchingWorkspace(controller: vscode.TestController) {
     return watcher;
   });
 }
-
-/* code coverage stuff.
-  //const coveredLines = new Map</* file uri  string, (vscode.StatementCoverage | undefined)[]>();
-
-   
-        /*if (test.uri && !coveredLines.has(test.uri.toString())) {
-          try {
-            const lines = (await getContentFromFilesystem(test.uri)).split('\n');
-            coveredLines.set(
-              test.uri.toString(),
-              lines.map((lineText, lineNo) =>
-                lineText.trim().length ? new vscode.StatementCoverage(0, new vscode.Position(lineNo, 0)) : undefined
-              )
-            );
-          } catch {
-            // ignored
-          }
-        }*/

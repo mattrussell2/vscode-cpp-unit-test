@@ -3,7 +3,7 @@
 	"displayName": "C++ Unit Testing Framework",
 	"description": "C++ Unit Testing Framework",
 	"enableProposedApi": false,
-	"version": "0.0.9",
+	"version": "0.1.0",
 	"publisher": "AutumnMoon",
 	"icon": "images/icon.png",
 	"engines": {
@@ -15,12 +15,38 @@
 	"activationEvents": [
 		"workspaceContains:**/*unit_tests.h"
 	],
-	"commands": [
-		{
-			"command": "cpp-unit-test.unit_test_init",
-			"title": "Initialize C++ Unit Test Files in Current Workspace"
+	"contributes": {
+		"configuration": {
+			"title": "C++ Unit Testing Framework",
+			"properties": {
+				"cpp-unit-test.makefile.driverFilename": {
+					"type": "string",
+					"default": "unit_test_driver",
+					"description": "Set a specific file name used for the C++ unit testing framework's driver. Note: your Makefile will need to compile/link with this file, which contains main(), and is built by the extension for you."
+				},
+				"cpp-unit-test.makefile.executableFilename": {
+					"type": "string",
+					"default": "a.out",
+					"description": "Set an executable file name used for the C++ unit testing framework's driver. Note: this file is created/destroyed for you by default."
+				},
+				"cpp-unit-test.makefile.targetName": {
+					"type": "string",
+					"default": "unit_test",
+					"description": "Set target name of your Makefile used to build the unit testing driver file."
+				},
+				"cpp-unit-test.build.cleanUpExecutableOnBuild": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Destroy the executable file after the tests run."
+				},
+				"cpp-unit-test.build.cleanUpDriverOnBuild": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Destroy the driver file automatically after building the tests"
+				}
+			}
 		}
-	],
+	},
 	"main": "./out/extension.js",
 	"workspaceTrust": {
 		"request": "onDemand",
