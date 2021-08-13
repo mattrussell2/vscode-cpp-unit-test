@@ -25,7 +25,7 @@ export const parseTestsFile = (text: string, events: {
         if (heading) {      
             const headingname = heading[0];      
             const range = new vscode.Range(new vscode.Position(lineNo, 0), new vscode.Position(lineNo, line.length));
-            events.onHeading(range, headingname, headingname.length + 2);
+            events.onHeading(range, headingname, headingname.length);
         }
     }   
 };

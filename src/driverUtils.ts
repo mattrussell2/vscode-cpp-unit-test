@@ -32,8 +32,6 @@ export function getMakefileTarget() : string {
 }
 
 export const writeLocalFile = async function(filecontents:string, filename:string) {
-    let sendback: { [index: string]: vscode.Uri };
-
     const folderUri = getCwdUri();     
     if (!folderUri) { return null; }   
     const fileUri = getFileUri(folderUri, filename);
@@ -100,27 +98,46 @@ export const generateDriver = async function(queue:{ test: vscode.TestItem; data
         return 0;
     }`.split("\n");
       
+    let parentFiles : string[] = [];
 
     let testPairs = "";
     queue.forEach(item => {  
         let name = item.data.getLabel();
         testPairs  += `\t{ "` + name + `", ` + name + ` },\n`;
+        let parentFile : string = item.test.id.split('/').filter(value => value.includes(".h"))[0];
+        if (!parentFiles.includes(parentFile)) {
+            parentFiles.push(parentFile);
+        }        
     });  
 
-    let insertLocation = -1;;
+    let insertLocation = -1;
+    driverContents.forEach((line, index) => {
+        if (line.includes(`#include "unit_tests.h"`)) {
+            insertLocation = index;
+        }
+    });   
+
+    let firstPart = driverContents.slice(0, insertLocation).join("\n") + "\n";
+    parentFiles.forEach(file => {       
+        firstPart += `    #include "` + file + `"\n`;       
+    });    
+  
+    let secondInsertLocation = -1;
     driverContents.forEach((line, index) => {
         if (line.includes("std::map<std::string, FnPtr> tests {")) {
-            insertLocation = index + 1;
+            secondInsertLocation = index + 1;
         }
-    });
+    });       
 
-    if (insertLocation === -1){        
+    if (secondInsertLocation === -1){        
         return Promise.resolve(null);
     }    
-    const firstPart = driverContents.slice(0, insertLocation).join("\n");
-    const secondPart = driverContents.slice(insertLocation, driverContents.length).join("\n");    
+
+    firstPart += driverContents.slice(insertLocation + parentFiles.length, secondInsertLocation).join("\n");
+  
+    const secondPart = driverContents.slice(secondInsertLocation, driverContents.length).join("\n");    
     const finalDriverContents = firstPart + testPairs + secondPart;
-    
+  
     return await writeLocalFile(finalDriverContents, getDriverFilename() );                        
 };
               

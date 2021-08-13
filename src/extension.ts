@@ -52,7 +52,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }          
     };
 
-    const runTestQueue = async () => {
+    const runTestQueue = async () => {      
         await generateDriver(queue);   
         const makeResult = await runMake();
 
@@ -73,8 +73,7 @@ export async function activate(context: vscode.ExtensionContext) {
        
         
         for (const { test, data } of queue) {        
-            run.appendOutput(`Running ${test.id}\r\n`);
-            console.log(test.id);
+            run.appendOutput(`Running ${test.id}\r\n`);            
             if (cancellation.isCancellationRequested) {          
                 run.skipped(test);
             } else {
@@ -82,8 +81,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 await data.run(test, run);          
             }
             run.appendOutput(`Completed ${test.id}\r\n`);        
-        }
-        console.log("about to end run");      
+        }              
         run.end();
         await cleanup();
     };    
@@ -112,7 +110,7 @@ export async function activate(context: vscode.ExtensionContext) {
       return;
     }
     
-    if (!e.uri.path.endsWith('tests.h')) {
+    if (!e.uri.path.endsWith('_tests.h')) {
       return;
     }
 
@@ -158,7 +156,7 @@ function startWatchingWorkspace(controller: vscode.TestController) {
   }
 
   return vscode.workspace.workspaceFolders.map(workspaceFolder => {
-    const pattern = new vscode.RelativePattern(workspaceFolder, '**/*unit_tests.h');
+    const pattern = new vscode.RelativePattern(workspaceFolder, '**/*_tests.h');
     const watcher = vscode.workspace.createFileSystemWatcher(pattern);
 
     watcher.onDidCreate(uri => getOrCreateFile(controller, uri));

@@ -109,13 +109,13 @@ export class TestCase {
         let result = await execShellCommand(execPath + ' ' + this.name);   
         const duration = Date.now() - start;
         if (!result.passed) {                   
-            let message = new vscode.TestMessage(result.stderr); 
+            let message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " + result.stderr); 
             message.location = new vscode.Location(item.uri!, item.range!);
             options.failed(item, message, duration);
         }else {       
             let valgrindResult = await execShellCommand('valgrind --leak-check=full --show-leak-kinds=all --error-exitcode=1 ' + execPath + ' ' + this.name);        
             if (!valgrindResult.passed) {                             
-                let message = new vscode.TestMessage(valgrindResult.stderr); 
+                let message = new vscode.TestMessage("stdout: " + valgrindResult.stdout + "\n stderr: " + valgrindResult.stderr); 
                 message.location = new vscode.Location(item.uri!, item.range!);
                 options.failed(item, message, duration);
             }else {
