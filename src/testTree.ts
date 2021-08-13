@@ -97,7 +97,7 @@ export class TestCase {
     return `${this.name}`;
   }
 
-    async run(item: vscode.TestItem, options: vscode.TestRun):Promise<void> {
+    async run(item: vscode.TestItem, options: vscode.TestRun): Promise<void> {
         const start = Date.now();    
         if (!vscode.workspace.workspaceFolders) {
             vscode.window.showInformationMessage('No folder or workspace opened');
