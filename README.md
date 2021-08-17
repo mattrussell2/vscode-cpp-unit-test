@@ -3,11 +3,11 @@ A simple and sweet VSCode extension to unit test C++ code.
 
 ## Setup
 To use the extension, you'll need to:
-1) Create a unit_tests.h file
-2) Set up your Makefile
-3) Start testing your code! 
+1)  Create a unit_tests.h file
+2)  Set up your Makefile
+3)  Start testing your code! 
 
-###NOTE: Please follow these instructions carefully!
+NOTE: Please follow these instructions carefully!
 
 ### Getting started
 If you haven't already, [install the C++ Unit Testing Framework by AutumMoon from the VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=AutumnMoon.cpp-unit-test). 
@@ -32,8 +32,8 @@ If you see the testing panel open on the left-hand window, like in the image bel
 
 Now, we'll edit ```unit_tests.h```. This file will hold your test functions, each of which:
 
-1) returns ```void```
-2) takes no arguments
+1)  returns ```void```
+2)  takes no arguments
 
 For instance, your ```unit_tests.h``` file might read:
 
@@ -69,10 +69,10 @@ CXX: clang++
 unit_test: unit_tests.h unit_test_driver.cpp
     $(CXX) unit_test_driver.cpp
 ```
-## Save!
+## Save
 Make sure you've saved both files.
 
-## Run Your Tests!
+## Run Your Tests
 Navigate back to ```unit_tests.h```. You should see 'play' buttons next to each test declaration. 
 
 ![image](./images/unit_test_img.png)
