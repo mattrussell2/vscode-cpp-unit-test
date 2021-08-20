@@ -24,7 +24,7 @@ Wonderful! Now, open this folder in a new workspace:
 
 ```code .```
 
-If you see the testing panel open on the left-hand window, like in the image below then you're good to go! If not, just restart your VSCode instance, cd to the directory you just created, and again run ```code .``` The reason for this is that the extension will only activate if you have a file named ```unit_tests.h``` in your workspace on launch of the VSCode instance (i.e. running ```code .```), which will minimize the extension's footprint in other contexts. Once the extension is loaded in your VSCode workspace, it will recompile your code automatically as you add / remove test cases.
+If you see the testing panel open on the left-hand window, like in the image below then you're good to go. If not, ensure that the above two files are in your cwd, and again run ```code .``` again (the extension will only activate if you have a file named ```unit_tests.h``` in your workspace on launch of the VSCode instance, which minimizes its footprint in other contexts). Once the extension is loaded in your VSCode workspace, it will discover tests as you write them, and will recompile your code automatically when you run your tests.
 
 ![image](./images/left-hand-side.png)
 
@@ -76,7 +76,7 @@ Navigate back to ```unit_tests.h```. You should see 'play' buttons next to each 
 
 ![image](./images/unit_test_img.png)
 
-Press each one to play its test!
+Press each one to play its test.
 
 ![image](./images/unit_test_output.png)
 
@@ -92,7 +92,7 @@ The ```// TEST GROUP``` part of the string is necessary, but anything after that
 
 ![image](./images/test_groups.png)
 
-Note that the test groups are hierarchical; each group will run all groups below it. If you want to create more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independent of one another. Note that each such file in your workspace will be #included in the testing driver, so if they don't compile it will be an issue.  
+Test groups are hierarchical - each group will run all groups below it. If you want to create more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver.  
 
 That's it! Happy testing :)
 
