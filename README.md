@@ -92,7 +92,7 @@ The ```// TEST GROUP``` part of the string is necessary, but anything after that
 
 ![image](./images/test_groups.png)
 
-Test groups are hierarchical - each group will run all groups below it. If you want to create more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver. When running test groups, the code will be compiled only once.
+Test groups are hierarchical - each group will run all groups below it. If you want to create more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver. When running test groups or all tests from all files, the code will be compiled only once.
 
 That's it! Happy testing :)
 
