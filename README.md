@@ -34,6 +34,7 @@ Now, we'll edit ```unit_tests.h```. This file will hold your test functions, eac
 
 1)  returns ```void```
 2)  takes no arguments
+3)  has a unique test function name
 
 For instance, your ```unit_tests.h``` file might read:
 
@@ -55,7 +56,9 @@ void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL
 
 ```assert``` statements are encouraged.
 
-Each test will effectively be run as its own 'main' by a driver that the extension creates for you. Valgrind will also be run on the test - it will fail if the main test fails or if valgrind fails (valgrind is run with --leak-check=full and --show-leak-kinds=all).
+Each test will effectively be run as its own 'main' by a driver that the extension creates for you. Valgrind will also be run on the test. 
+
+A test is considered successful if it finishes execution; it will fail if either the main test fails or if valgrind fails (valgrind is run with --leak-check=full and --show-leak-kinds=all).
 
 The last thing to do is to set up the Makefile.
 
@@ -92,7 +95,7 @@ The ```// TEST GROUP``` part of the string is necessary, but anything after that
 
 ![image](./images/test_groups.png)
 
-Test groups are hierarchical - each group will run all groups below it. If you want to create more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver. When running test groups or all tests from all files, the code will be compiled only once.
+Test groups are hierarchical - each group will run all groups below it. If you want to create more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver; also, each test function name even across multiple files must be unique. When running test groups or all tests from all files, the code will be compiled only once.
 
 That's it! Happy testing :)
 
