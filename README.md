@@ -68,7 +68,7 @@ Your ```Makefile``` will need a rule named ```unit_test``` which compiles your c
 ```bash
 CXX: clang++
 
-unit_test: unit_tests.h unit_test_driver.cpp
+unit_test: unit_test_driver.cpp unit_tests.h 
     $(CXX) unit_test_driver.cpp
 ```
 ## Save
