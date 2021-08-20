@@ -89,7 +89,7 @@ You can also head to the 'test explorer panel, where there is an overview of all
 
 You can also create test groups with a comment above the first test in a group as follows:
 
-```// TEST GROUP SOMENAME ```
+```/* TEST GROUP SOMENAME */```
 
 (A regex is looking for the phrase ```TEST GROUP```).
 
