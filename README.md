@@ -53,7 +53,7 @@ void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL
 }
 ```
 
-```assert``` statements are encouraged!
+```assert``` statements are encouraged.
 
 Each test will effectively be run as its own 'main' by a driver that the extension creates for you. Valgrind will also be run on the test - it will fail if the main test fails or if valgrind fails (valgrind is run with --leak-check=full and --show-leak-kinds=all).
 
