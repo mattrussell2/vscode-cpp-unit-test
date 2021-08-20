@@ -10,7 +10,6 @@ class LinkedList {
         Node* prev;
     };
 
-
     public:
     LinkedList() : head(nullptr), tail(nullptr), size(0){};
     ~LinkedList() { destroy(); };

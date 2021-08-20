@@ -49,3 +49,7 @@ void push_back_1() {
         assert(strstream.str() == s);
     }
 }
+
+void fail() {
+    assert(1 == 0);
+}

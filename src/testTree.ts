@@ -109,7 +109,8 @@ export class TestCase {
         let result = await execShellCommand(execPath + ' ' + this.name);   
         const duration = Date.now() - start;
         if (!result.passed) {                   
-            let message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " + result.stderr); 
+            let message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " + result.stderr);                         
+            console.log(item.range); //console.log(item.range!);
             message.location = new vscode.Location(item.uri!, item.range!);
             options.failed(item, message, duration);
         }else {       
