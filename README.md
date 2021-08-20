@@ -91,7 +91,7 @@ You can also create test groups with a comment above the first test in a group a
 
 ```// TEST GROUP SOMENAME ```
 
-The ```// TEST GROUP``` part of the string is necessary, but anything after that will work.
+(A regex is looking for the phrase ```TEST GROUP```).
 
 ![image](./images/test_groups.png)
 
