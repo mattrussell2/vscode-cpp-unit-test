@@ -39,13 +39,12 @@ For instance, your ```unit_tests.h``` file might read:
 
 ```cpp
 #include <cassert>
-#include <iostream>
 
 void test_pass() {
     assert(0 == 0);
 }
 
-void test_fail()) {
+void test_fail() {
     assert(1 == 0);
 }
 
