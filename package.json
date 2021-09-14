@@ -3,7 +3,7 @@
     "displayName": "C++ Unit Testing Framework",
     "description": "C++ Unit Testing Framework",
     "enableProposedApi": false,
-    "version": "0.1.4",
+    "version": "0.1.5",
     "publisher": "AutumnMoon",
     "icon": "images/icon.png",
     "engines": {
@@ -13,7 +13,7 @@
         "Other"
     ],
     "activationEvents": [
-        "workspaceContains:**/*unit_tests.h"
+        "workspaceContains:*_tests.h"
     ],
     "contributes": {
         "configuration": {
