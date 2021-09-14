@@ -49,7 +49,7 @@ void test_fail() {
     assert(1 == 0);
 }
 
-void test_fail_valgrind() { //NOTE valgrind is broken on OSX and WSL
+void test_fail_valgrind() {
     int *x = new int[100];
 }
 ```
@@ -89,9 +89,9 @@ You can also head to the 'test explorer panel, where there is an overview of all
 
 You can also create test groups with a comment above the first test in a group as follows:
 
-```// TEST GROUP SOMENAME ```
+```/* TEST GROUP SOMENAME */```
 
-The ```// TEST GROUP``` part of the string is necessary, but anything after that will work.
+(A regex is looking for the phrase ```TEST GROUP```).
 
 ![image](./images/test_groups.png)
 
@@ -101,4 +101,4 @@ That's it! Happy testing :)
 
 Matt
 
-PS: Many thanks to [https://github.com/microsoft/vscode-extension-samples](https://github.com/microsoft/vscode-extension-samples) for having some great examples to work from!
+PS: Many thanks to [https://github.com/microsoft/vscode-extension-samples](https://github.com/microsoft/vscode-extension-samples) for having some great examples to work from.
