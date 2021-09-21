@@ -1,4 +1,4 @@
 CXX=clang++
 
-unit_test:
-	$(CXX) unit_test_driver.cpp -o build
+unit_test: unit_test_driver.o
+	$(CXX) unit_test_driver.o

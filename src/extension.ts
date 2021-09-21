@@ -38,11 +38,18 @@ export async function activate(context: vscode.ExtensionContext) {
         const folderUri = getCwdUri();     
         if (!folderUri) { return "failed"; }        
     
-      // let's run make after parsing the test file.  
+        let compileDriverResult = await execShellCommand('clang++ -c unit_test_driver.cpp', {cwd: folderUri.fsPath});
+        if (!compileDriverResult.passed) {                                
+            return compileDriverResult.stderr;
+        }
+
+        // let's run make after parsing the test file.  
         let makeResult = await execShellCommand('make ' + getMakefileTarget(), {cwd: folderUri.fsPath});
         
-        if (getDriverCleanUpOnBuild()) {
-            const fileUri = getFileUri(folderUri, getDriverFilename() );     
+        if (getDriverCleanUpOnBuild()) {   
+            let fileUri = getFileUri(folderUri, 'unit_test_driver.cpp');     
+            vscode.workspace.fs.delete(fileUri);           
+            fileUri = getFileUri(folderUri, getDriverFilename());     
             vscode.workspace.fs.delete(fileUri);  
         }
         if (makeResult.passed) {                    

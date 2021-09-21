@@ -138,7 +138,7 @@ export const generateDriver = async function(queue:{ test: vscode.TestItem; data
     const secondPart = driverContents.slice(secondInsertLocation, driverContents.length).join("\n");    
     const finalDriverContents = firstPart + testPairs + secondPart;
   
-    return await writeLocalFile(finalDriverContents, getDriverFilename() );                        
+    return await writeLocalFile(finalDriverContents, "unit_test_driver.cpp" );                        
 };
               
 export const cleanup = async function() {   

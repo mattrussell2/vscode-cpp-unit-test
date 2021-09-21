@@ -3,7 +3,7 @@
     "displayName": "C++ Unit Testing Framework",
     "description": "C++ Unit Testing Framework",
     "enableProposedApi": false,
-    "version": "0.1.5",
+    "version": "0.2.0",
     "publisher": "AutumnMoon",
     "icon": "images/icon.png",
     "engines": {
@@ -21,8 +21,8 @@
             "properties": {
                 "cpp-unit-test.makefile.driverFilename": {
                     "type": "string",
-                    "default": "unit_test_driver.cpp",
-                    "description": "Set a specific file name used for the C++ unit testing framework's driver. Note: your Makefile will need to compile/link with this file, which contains main(), and is built by the extension for you."
+                    "default": "unit_test_driver.o",
+                    "description": "Set a specific file name used for the C++ unit testing framework's driver. Note: your Makefile will need to link with this file, which contains main(), and is built by the extension for you."
                 },
                 "cpp-unit-test.makefile.executableFilename": {
                     "type": "string",

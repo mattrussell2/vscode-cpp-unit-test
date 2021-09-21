@@ -14,7 +14,10 @@ If you haven't already, [install the C++ Unit Testing Framework by AutumnMoon fr
 
 Then, create and move into a new folder. 
 
-```mkdir unittest_demo && cd unittest_demo```
+```
+mkdir unittest_demo 
+cd unittest_demo
+```
 
 Now, create a Makefile and unit_tests.h file:
 
@@ -63,13 +66,13 @@ A test is considered successful if it finishes execution; it will fail if either
 The last thing to do is to set up the Makefile.
 
 ## Makefile
-Your ```Makefile``` will need a rule named ```unit_test``` which compiles your code with a file named ```unit_test_driver.cpp```. This is a custom driver file built by the extension that includes a ```main``` function. If you'd like to separate compilation and linking, that's fine, just make sure you have a rule to build ```unit_test_driver.o``` from ```unit_test_driver.cpp``` (it has no dependencies except ```unit_tests.h```). 
+Your ```Makefile``` will need a rule named ```unit_test``` which links your code with a file named ```unit_test_driver.o```. This is a custom driver file built by the extension that includes a ```main``` function. 
 
 ```bash
 CXX: clang++
 
-unit_test: unit_test_driver.cpp unit_tests.h 
-    $(CXX) unit_test_driver.cpp
+unit_test: unit_test_driver.o 
+    $(CXX) unit_test_driver.o
 ```
 ## Save
 Make sure you've saved both files.
