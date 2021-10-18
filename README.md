@@ -63,6 +63,8 @@ Each test will effectively be run as its own 'main' by a driver that the extensi
 
 A test is considered successful if it finishes execution; it will fail if either the main test fails or if valgrind fails (valgrind is run with --leak-check=full and --show-leak-kinds=all).
 
+Also, tests that diff against expected output are supported. Any file with the same name as a test in a folder named stdout/ will automatically be diff'd against the stdout of that test. See the sample/ for examples.
+
 The last thing to do is to set up the Makefile.
 
 ## Makefile
