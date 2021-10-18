@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 import { parseTestsFile } from './parser';
 import { join } from 'path';
-import { execShellCommand, getExecutableFilename } from './driverUtils';
+import { execShellCommand, getCwdUri, getExecutableFilename, writeLocalFile } from './driverUtils';
+import { existsSync, unlinkSync } from 'fs';
 
 const textDecoder = new TextDecoder('utf-8');
 
@@ -119,9 +120,24 @@ export class TestCase {
                 let message = new vscode.TestMessage("stdout: " + valgrindResult.stdout + "\n stderr: " + valgrindResult.stderr); 
                 message.location = new vscode.Location(item.uri!, item.range!);
                 options.failed(item, message, duration);
-            }else {
-                options.passed(item, duration);
-            }        
+            }else {           
+                const testFilePath = join(wsFolderUri, 'stdout/' +  this.name);                
+                if (existsSync(testFilePath)) {
+                    await writeLocalFile(result.stdout, 'tmp');
+                    let diffResult = await execShellCommand('diff ' + wsFolderUri + '/tmp ' + wsFolderUri + '/stdout/' + this.name);
+                    if (!diffResult.passed) {
+                        let message = new vscode.TestMessage("diff failed! \n" + diffResult.stderr + '\n' + diffResult.stdout); 
+                        message.location = new vscode.Location(item.uri!, item.range!);
+                        options.failed(item, message, duration); 
+                    }else {                    
+                        options.passed(item, duration);
+                    } 
+                    unlinkSync(wsFolderUri + '/tmp');
+                }
+                else {                
+                    options.passed(item, duration);                
+                }                                    
+            }
         } 
     }
 }  

@@ -156,7 +156,7 @@ export const execShellCommand = async function(cmd:string, fsPathDict:Object={})
     
     return new Promise((resolve, reject) => {
      exec(cmd, fsPathDict,(error:string, stdout:string, stderr:string) => {
-        let result = {'passed':false, 'stdout':"", 'stderr':''};      
+        let result = {'passed': false, 'stdout':"", 'stderr':''};      
         error ? result.passed = false : result.passed = true;
         result.stdout = stdout;
         result.stderr = stderr;

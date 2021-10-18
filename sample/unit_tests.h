@@ -17,3 +17,11 @@ void test_fail() {
 void test_fail_valgrind() {
     int* x = new int[100];
 }
+
+void diff_test_pass() {
+    std::cout << "hello world!" << std::endl;
+}
+
+void diff_test_fail() {
+    std::cout << "hello world" << std::endl;
+}
