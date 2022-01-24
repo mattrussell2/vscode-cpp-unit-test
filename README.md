@@ -31,6 +31,8 @@ If you see the testing panel open on the left-hand window, like in the image bel
 
 ![image](./images/left-hand-side.png)
 
+Note! Whenever you plan to use the unit_test framework, please run ```code .``` to initialize a workspace in the directory where you are working. This way, the correct ```unit_tests.h``` script will be used! 
+
 ### unit_tests.h
 
 Now, we'll edit ```unit_tests.h```. This file will hold your test functions, each of which:
