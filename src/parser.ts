@@ -3,18 +3,27 @@ import * as vscode from 'vscode';
 
 const testRe = /\s*void .*\(\).*/;
 const headingRe = /\s*TEST\s*GROUP.*$/;
+const commentRe = /\/\*([\s\S]*?)\*\/\s*/;
 
 export const parseTestsFile = (text: string, events: {
   onTest(range: vscode.Range, a: string): void;
   onHeading(range: vscode.Range, name: string, depth: number): void;
 }) => {
+    var cmtdLines = commentRe.exec(text);
+    var cmtdLineString = '';
+    if (cmtdLines) { 
+        cmtdLineString = cmtdLines.join('');
+    }
+    
     const lines = text.split('\n');
     
     for (let lineNo = 0; lineNo < lines.length; lineNo++) {
         const line = lines[lineNo];
         const test = testRe.exec(line);
+        
+        console.log(test);
 
-        if (test) {      
+        if (test && !cmtdLineString.includes(test[0])) {      
             const name = test[0].split("(")[0].split(" ")[1];                    
             const range = new vscode.Range(new vscode.Position(lineNo, 0), new vscode.Position(lineNo, test[0].length));
             events.onTest(range, name);      

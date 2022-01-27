@@ -2,8 +2,8 @@
     "name": "cpp-unit-test",
     "displayName": "C++ Unit Testing Framework",
     "description": "C++ Unit Testing Framework",
-    "enableProposedApi": false,
-    "version": "0.2.1",
+    "enableApiProposals": false,
+    "version": "0.2.5",
     "publisher": "AutumnMoon",
     "icon": "images/icon.png",
     "engines": {

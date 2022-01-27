@@ -15,7 +15,8 @@ export async function activate(context: vscode.ExtensionContext) {
     const run = ctrl.createTestRun(request);
             
     // map of file uris to statments on each line:
-    const discoverTests = async (tests: Iterable<vscode.TestItem>) => {         
+    const discoverTests = async (tests: Iterable<vscode.TestItem>) => {
+        console.log("discovering tests");        
       for (const test of tests) {        
         if (request.exclude?.includes(test)) {
           continue;
@@ -29,7 +30,7 @@ export async function activate(context: vscode.ExtensionContext) {
           if (data instanceof TestFile && !data.didResolve) {
             await data.updateFromDisk(ctrl, test);
           }           
-          await discoverTests(gatherTestItems(test.children));
+        await discoverTests(gatherTestItems(test.children));
         }       
       }
     };    
@@ -38,7 +39,7 @@ export async function activate(context: vscode.ExtensionContext) {
         const folderUri = getCwdUri();     
         if (!folderUri) { return "failed"; }        
     
-        let compileDriverResult = await execShellCommand('clang++ -c unit_test_driver.cpp', {cwd: folderUri.fsPath});
+        let compileDriverResult = await execShellCommand('clang++ -std=c++14 -c unit_test_driver.cpp', {cwd: folderUri.fsPath});
         if (!compileDriverResult.passed) {                                
             return compileDriverResult.stderr;
         }
@@ -92,6 +93,7 @@ export async function activate(context: vscode.ExtensionContext) {
         run.end();
         await cleanup();
     };    
+
     discoverTests(request.include ?? gatherTestItems(ctrl.items)).then(runTestQueue);
     
   };

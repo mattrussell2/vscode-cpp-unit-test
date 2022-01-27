@@ -6,7 +6,7 @@ void test_pass() {
 }
 
 void test_pass_1() {
-    int* x = new int[100];
+    int *x = new int[100];
     delete[] x;
 }
 
@@ -15,7 +15,7 @@ void test_fail() {
 }
 
 void test_fail_valgrind() {
-    int* x = new int[100];
+    int *x = new int[100];
 }
 
 void diff_test_pass() {
