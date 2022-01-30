@@ -18,10 +18,22 @@ void test_fail_valgrind() {
     int *x = new int[100];
 }
 
+/* diff with file stdout/diff_test_pass has this text */
 void diff_test_pass() {
     std::cout << "hello world!" << std::endl;
 }
 
+/* file stdout/diff_test_fail has an extra '!' in it */
 void diff_test_fail() {
     std::cout << "hello world" << std::endl;
 }
+
+/*
+void block_commented_test() {
+    std::cout << "don't run me";
+}
+*/
+
+// void inline_commented_test() {
+//    std::cout << "don't run me";
+//}
