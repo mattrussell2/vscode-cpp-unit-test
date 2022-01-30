@@ -3,7 +3,7 @@
     "displayName": "C++ Unit Testing Framework",
     "description": "C++ Unit Testing Framework",
     "enableApiProposals": false,
-    "version": "0.2.5",
+    "version": "0.2.9",
     "publisher": "AutumnMoon",
     "icon": "images/icon.png",
     "engines": {

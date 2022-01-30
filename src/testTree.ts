@@ -26,9 +26,14 @@ export const getContentFromFilesystem = async (uri: vscode.Uri) => {
 export class TestFile {
   public didResolve = false;
 
-  public async updateFromDisk(controller: vscode.TestController,item: vscode.TestItem) {
+  public async updateFromDisk(controller: vscode.TestController, item: vscode.TestItem) {
     try {
+        // item is the unit_tests.h file -> content is the string of the file
+        //console.log("updating from disk");
+        //console.log(item.label);
       const content = await getContentFromFilesystem(item.uri!);
+      //console.log("got content from filesystem");
+      //console.log(content);
       item.error = undefined;
       this.updateFromContents(controller, content, item);
     } catch (e) {
@@ -40,20 +45,27 @@ export class TestFile {
    * Parses the tests from the input text, and updates the tests contained
    * by this file to be those from the text,
    */
-  public updateFromContents(controller: vscode.TestController, content: string, item: vscode.TestItem) {
+  public updateFromContents(controller: vscode.TestController, 
+                            content: string, 
+                            item: vscode.TestItem) {
     const ancestors = [{ item, children: [] as vscode.TestItem[]}];
+    console.log("ancestors", ancestors);
+
     const thisGeneration = generationCounter++;
     this.didResolve = true;
 
     const ascend = (depth: number) => {
       while (ancestors.length > depth) {
         const finished = ancestors.pop()!;
+        console.log("ascending");
+        console.log(finished.item);
         finished.item.children.replace(finished.children);
       }
     };
 
     parseTestsFile(content, {
       onTest: (range, name) => { 
+          console.log("parsing tests file -- name: ", name);
         const parent = ancestors[ancestors.length - 1];
         const data = new TestCase(name, thisGeneration);
         const id = `${item.uri}/${data.getLabel()}`;        
@@ -110,8 +122,7 @@ export class TestCase {
         let result = await execShellCommand(execPath + ' ' + this.name);   
         const duration = Date.now() - start;
         if (!result.passed) {                   
-            let message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " + result.stderr);                         
-            console.log(item.range); //console.log(item.range!);
+            let message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " + result.stderr);                                     
             message.location = new vscode.Location(item.uri!, item.range!);
             options.failed(item, message, duration);
         }else {       
