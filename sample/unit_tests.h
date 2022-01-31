@@ -6,7 +6,7 @@ void test_pass() {
 }
 
 void test_pass_1() {
-    int *x = new int[100];
+    int* x = new int[100];
     delete[] x;
 }
 
@@ -15,7 +15,7 @@ void test_fail() {
 }
 
 void test_fail_valgrind() {
-    int *x = new int[100];
+    int* x = new int[100];
 }
 
 /* diff with file stdout/diff_test_pass has this text */
@@ -27,6 +27,18 @@ void diff_test_pass() {
 void diff_test_fail() {
     std::cout << "hello world" << std::endl;
 }
+
+void comment_after_line() { // comment here
+    std::cout << "hello!";
+}
+
+/*
+ * void name_in_comment() {
+ */
+void name_in_comment() {} // some test
+
+// void name_in_inline_comment() {
+void name_in_inline_comment() {}
 
 /*
 void block_commented_test() {
