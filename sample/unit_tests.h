@@ -49,3 +49,8 @@ void block_commented_test() {
 // void inline_commented_test() {
 //    std::cout << "don't run me";
 //}
+
+void timeout_test() { 
+    std::cout << "testing" << std::endl;        
+    while(true) {}
+}

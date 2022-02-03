@@ -3,7 +3,7 @@
     "displayName": "C++ Unit Testing Framework",
     "description": "C++ Unit Testing Framework",
     "enableApiProposals": false,
-    "version": "0.3.0",
+    "version": "0.3.6",
     "publisher": "AutumnMoon",
     "icon": "images/icon.png",
     "engines": {
@@ -43,6 +43,16 @@
                     "type": "boolean",
                     "default": "true",
                     "description": "Destroy the driver file automatically after building the tests"
+                },
+                "cpp-unit-test.run.timeouttime": {
+                    "type": "integer",
+                    "default": "60",
+                    "description": "Max time per test (in seconds)."
+                },
+                "cpp-unit-test.run.valgrindtimeouttime": {
+                    "type": "integer",
+                    "default": "60",
+                    "description": "Max time per valgrind test (in seconds)."
                 }
             }
         }

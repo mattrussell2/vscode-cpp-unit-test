@@ -11,6 +11,15 @@ function getConfiguration(configtype : string) : {[key : string] : string}  {
     return config; 
 }
 
+
+export function getValgrindTimeoutTime() : string {
+    return getConfiguration('run')['valgrindtimeouttime'];
+}
+
+export function getTimeoutTime() : string {
+    return getConfiguration('run')['timeouttime'];
+}
+
 export function getCleanUpExecutableOnBuild() : string {
     return getConfiguration('build')['cleanUpExecutableOnBuild'];  
 }
@@ -153,11 +162,21 @@ export const cleanup = async function() {
 
 export const execShellCommand = async function(cmd:string, fsPathDict:Object={}):Promise<any> {
     const exec = require('child_process').exec;
-    
+    //Object.assign(fsPathDict);
     return new Promise((resolve, reject) => {
-     exec(cmd, fsPathDict,(error:string, stdout:string, stderr:string) => {
-        let result = {'passed': false, 'stdout':"", 'stderr':''};      
-        error ? result.passed = false : result.passed = true;
+     exec(cmd, fsPathDict,(error:NodeJS.ErrnoException, stdout:string, stderr:string) => {
+        let result = {'passed': false, 'stdout':"", 'stderr':"", 'exitcode':""};      
+        if (error) {
+            result.passed = false;
+            if (error.code){
+                result.exitcode = error.code;
+                console.log("exitcode: " + result.exitcode);
+            } 
+        }else{
+            result.passed = true;
+            result.exitcode = '0';
+        }
+                
         result.stdout = stdout;
         result.stderr = stderr;
         resolve(result);     

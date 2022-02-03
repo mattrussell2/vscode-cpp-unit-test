@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
 import { parseTestsFile } from './parser';
 import { join } from 'path';
-import { execShellCommand, getCwdUri, getExecutableFilename, writeLocalFile } from './driverUtils';
+import { execShellCommand, getCwdUri, getExecutableFilename, 
+         getTimeoutTime, getValgrindTimeoutTime, writeLocalFile } from './driverUtils';
 import { existsSync, unlinkSync } from 'fs';
 
 const textDecoder = new TextDecoder('utf-8');
@@ -119,16 +120,28 @@ export class TestCase {
         let wsFolderUri = vscode.workspace.workspaceFolders[0].uri.fsPath;
         let execPath = join(wsFolderUri, getExecutableFilename());      
 
-        let result = await execShellCommand(execPath + ' ' + this.name);   
+        let timeouttime = getTimeoutTime().toString();
+        let valgrindtimeouttime = getValgrindTimeoutTime().toString();
+        let result = await execShellCommand('timeout --preserve-status ' + timeouttime + ' ' + execPath + ' ' + this.name);   
         const duration = Date.now() - start;
         if (!result.passed) {                   
-            let message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " + result.stderr);                                     
+            let message = new vscode.TestMessage("");            
+            if (result.exitcode === 143) {
+                message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: code timed out (>" + timeouttime + "s to run) while running test");
+            }else {                                              
+                message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " + result.stderr);                                     
+            }
             message.location = new vscode.Location(item.uri!, item.range!);
             options.failed(item, message, duration);
         }else {       
-            let valgrindResult = await execShellCommand('valgrind --leak-check=full --show-leak-kinds=all --error-exitcode=1 ' + execPath + ' ' + this.name);        
-            if (!valgrindResult.passed) {                             
-                let message = new vscode.TestMessage("stdout: " + valgrindResult.stdout + "\n stderr: " + valgrindResult.stderr); 
+            let valgrindResult = await execShellCommand('timeout --preserve-status ' + valgrindtimeouttime + ' valgrind --leak-check=full --show-leak-kinds=all --error-exitcode=1 ' + execPath + ' ' + this.name);        
+            if (!valgrindResult.passed) {
+                let message = new vscode.TestMessage("");
+                if (valgrindResult.exitcode === 143) {
+                    message = new vscode.TestMessage("stdout: " + valgrindResult.stdout + "\n stderr: valgrind timed out (>" + valgrindtimeouttime + "s to run while running test");
+                }else {                             
+                    message = new vscode.TestMessage("stdout: " + valgrindResult.stdout + "\n stderr: " + valgrindResult.stderr); 
+                }
                 message.location = new vscode.Location(item.uri!, item.range!);
                 options.failed(item, message, duration);
             }else {           
