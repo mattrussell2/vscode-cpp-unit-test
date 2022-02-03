@@ -162,7 +162,7 @@ export const cleanup = async function() {
 
 export const execShellCommand = async function(cmd:string, fsPathDict:Object={}):Promise<any> {
     const exec = require('child_process').exec;
-    //Object.assign(fsPathDict);
+    
     return new Promise((resolve, reject) => {
      exec(cmd, fsPathDict,(error:NodeJS.ErrnoException, stdout:string, stderr:string) => {
         let result = {'passed': false, 'stdout':"", 'stderr':"", 'exitcode':""};      
