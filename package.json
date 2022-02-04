@@ -3,7 +3,7 @@
     "displayName": "C++ Unit Testing Framework",
     "description": "C++ Unit Testing Framework",
     "enableApiProposals": false,
-    "version": "0.3.6",
+    "version": "0.3.8",
     "publisher": "AutumnMoon",
     "icon": "images/icon.png",
     "engines": {
@@ -19,12 +19,12 @@
         "configuration": {
             "title": "C++ Unit Testing Framework",
             "properties": {
-                "cpp-unit-test.makefile.driverFilename": {
+                "cpp-unit-test.makefile.driverFileName": {
                     "type": "string",
                     "default": "unit_test_driver.o",
-                    "description": "Set a specific file name used for the C++ unit testing framework's driver. Note: your Makefile will need to link with this file, which contains main(), and is built by the extension for you."
+                    "description": "Specific file name used for the C++ unit testing framework's driver.\n Note: the driver is built for you, and contains main(); your Makefile will need to link with this file"
                 },
-                "cpp-unit-test.makefile.executableFilename": {
+                "cpp-unit-test.makefile.executableFileName": {
                     "type": "string",
                     "default": "a.out",
                     "description": "Set an executable file name used for the C++ unit testing framework's driver. Note: this file is created/destroyed for you by default."
@@ -39,21 +39,36 @@
                     "default": "true",
                     "description": "Destroy the executable file after the tests run."
                 },
-                "cpp-unit-test.build.cleanUpDriverOnBuild": {
+                "cpp-unit-test.build.cleanUpDriverCppOnBuild": {
                     "type": "boolean",
                     "default": "true",
-                    "description": "Destroy the driver file automatically after building the tests"
+                    "description": "Destroy the driver .cpp file automatically after building the tests \nNote: Driver .o file is always destroyed - keep the .cpp file only if you would like to inspect the driver file. "
                 },
-                "cpp-unit-test.run.timeouttime": {
+                "cpp-unit-test.build.runMakeCleanOnExit": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "If true, run `make clean` after running tests"
+                },
+                "cpp-unit-test.run.timeoutTime": {
                     "type": "integer",
                     "default": "60",
                     "description": "Max time per test (in seconds)."
                 },
-                "cpp-unit-test.run.valgrindtimeouttime": {
+                "cpp-unit-test.run.valgrindTimeoutTime": {
                     "type": "integer",
                     "default": "60",
                     "description": "Max time per valgrind test (in seconds)."
-                }
+                },                
+                "cpp-unit-test.valgrind.runWithValgrind": {
+                    "type": "boolean",
+                    "default": "true",
+                    "description": "whether or not to run valgrind on tests"
+                },
+                "cpp-unit-test.valgrind.valgrindFlags": {
+                    "type": "string",
+                    "default": "--track-origins=yes --leak-check=full --show-leak-kinds=all",
+                    "description": "options for valgrind - default is: `--track-origins=yes --leak-check=full --show-leak-kinds=all`. NOTE: Valgrind is also run with --error-exitcode=1; this is not optional"
+                }                 
             }
         }
     },

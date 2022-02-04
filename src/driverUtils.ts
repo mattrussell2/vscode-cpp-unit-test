@@ -11,59 +11,75 @@ function getConfiguration(configtype : string) : {[key : string] : string}  {
     return config; 
 }
 
+function getBoolConfiguration(configtype : string) : {[key : string] : boolean}  {
+    const uTestConfig = vscode.workspace.getConfiguration('cpp-unit-test');
+    const config : {[key : string] : boolean} | undefined = uTestConfig.get(configtype);
+    if (config === undefined) { console.log("NEED TO DEFINE " + configtype + " CONFIG"); exit(1); }
+    return config; 
+}
 
-export function getValgrindTimeoutTime() : string {
-    return getConfiguration('run')['valgrindtimeouttime'];
+export function getValgrindFlags() : string {
+    return getConfiguration('valgrind')['valgrindFlags'];
+}
+
+export function getRunWithValgrind() : boolean {
+    return getBoolConfiguration('valgrind')['runWithValgrind'];         
 }
 
 export function getTimeoutTime() : string {
-    return getConfiguration('run')['timeouttime'];
+    return getConfiguration('run')['timeoutTime'];
 }
 
-export function getCleanUpExecutableOnBuild() : string {
-    return getConfiguration('build')['cleanUpExecutableOnBuild'];  
+export function getValgrindTimeoutTime() : string {
+    return getConfiguration('run')['valgrindTimeoutTime'];
 }
 
-export function getDriverCleanUpOnBuild() : string {
-    return getConfiguration('build')['cleanUpDriverOnBuild'];
+export function getRunMakeCleanOnExit() : boolean {
+    return getBoolConfiguration('build')['runMakeCleanOnExit'];    
+}
+export function getCleanUpExecutableOnBuild() : boolean {
+    return getBoolConfiguration('build')['cleanUpExecutableOnBuild'];  
 }
 
-export function getDriverFilename() : string {
-    return getConfiguration('makefile')["driverFilename"];    
+export function getDriverCppCleanUpOnBuild() : string {
+    return getConfiguration('build')['cleanUpDriverCppOnBuild'];
 }
 
-export function getExecutableFilename() : string {
-    return getConfiguration('makefile')["executableFilename"];    
+export function getDriverFileName() : string {
+    return getConfiguration('makefile')["driverFileName"];    
+}
+
+export function getExecutableFileName() : string {
+    return getConfiguration('makefile')["executableFileName"];    
 }
 
 export function getMakefileTarget() : string {
     return getConfiguration('makefile')["targetName"];    
 }
 
-export const writeLocalFile = async function(filecontents:string, filename:string) {
-    const folderUri = getCwdUri();     
-    if (!folderUri) { return null; }   
-    const fileUri = getFileUri(folderUri, filename);
+export const writeLocalFile = async function(filecontents:string, fName:string) {   
+    const fileUri = getFileUri(getCwdUri(), fName);
     var enc = new TextEncoder();
     var encodedDriverContents = enc.encode(filecontents);
     return await vscode.workspace.fs.writeFile(fileUri, encodedDriverContents);                
 };
 
-export function getFileUri(folderUri:vscode.Uri, filename:string) {
-    return folderUri.with({ path: posix.join(folderUri.path, filename) });
+export function getFileUri(folderUri:vscode.Uri, fName:string) {
+    return folderUri.with({ path: posix.join(folderUri.path, fName) });
 }
-
 
 export function getCwdUri() {
     if (!vscode.workspace.workspaceFolders) {
-        vscode.window.showInformationMessage('No folder or workspace opened');
-        return;
+        vscode.window.showInformationMessage('No folder or workspace opened!');
+        exit(1);        
     } 
     return vscode.workspace.workspaceFolders[0].uri;
 }
 
-export const generateDriver = async function(queue:{ test: vscode.TestItem; data: TestCase }[]) : Promise<void | null> {
-    // create unit-test-driver.cpp and auto-populate it
+export const generateDriver = 
+    async function(queue: { test: vscode.TestItem; data: TestCase }[])
+                                                       : Promise<void | null> {
+    // create driver file and auto-populate it
     let driverContents = `
     /*
     unit_test_driver.cpp
@@ -113,7 +129,9 @@ export const generateDriver = async function(queue:{ test: vscode.TestItem; data
     queue.forEach(item => {  
         let name = item.data.getLabel();
         testPairs  += `\t{ "` + name + `", ` + name + ` },\n`;
-        let parentFile : string = item.test.id.split('/').filter(value => value.includes(".h"))[0];
+        let parentFile : string = 
+              item.test.id.split('/').filter(value => value.includes(".h"))[0];
+        
         if (!parentFiles.includes(parentFile)) {
             parentFiles.push(parentFile);
         }        
@@ -138,33 +156,44 @@ export const generateDriver = async function(queue:{ test: vscode.TestItem; data
         }
     });       
 
-    if (secondInsertLocation === -1){        
+    if (secondInsertLocation === -1) {        
         return Promise.resolve(null);
     }    
 
-    firstPart += driverContents.slice(insertLocation + parentFiles.length, secondInsertLocation).join("\n");
+    firstPart += driverContents.slice(insertLocation + parentFiles.length, 
+                                      secondInsertLocation).join("\n");
   
-    const secondPart = driverContents.slice(secondInsertLocation, driverContents.length).join("\n");    
+    const secondPart = driverContents.slice(secondInsertLocation, 
+                                            driverContents.length).join("\n");    
+
     const finalDriverContents = firstPart + testPairs + secondPart;
   
-    return await writeLocalFile(finalDriverContents, "unit_test_driver.cpp" );                        
+    return await writeLocalFile(finalDriverContents, "unit_test_driver.cpp");                        
 };
-              
-export const cleanup = async function() {   
-    if (getCleanUpExecutableOnBuild()){     
-        const folderUri = getCwdUri();
-        if (!folderUri) { return; }
-        const fileUri = getFileUri(folderUri, getExecutableFilename());
-        vscode.workspace.fs.delete(fileUri);    
-    }       
+
+export const cleanup = async function() {       
+    if (getDriverCppCleanUpOnBuild()) {
+        vscode.workspace.fs.delete(getFileUri(getCwdUri(), "unit_test_driver.cpp"));
+    }
+    if (getCleanUpExecutableOnBuild()) {                     
+        vscode.workspace.fs.delete(getFileUri(getCwdUri(), getExecutableFileName()));    
+    }          
+    if (getRunMakeCleanOnExit()) {
+        await execShellCommand("make clean");
+    }
 };
 
 
-export const execShellCommand = async function(cmd:string, fsPathDict:Object={}):Promise<any> {
+export const execShellCommand =
+ async function(cmd:string, fsPathDict:Object={}) : Promise<any> {
+    
     const exec = require('child_process').exec;
     
     return new Promise((resolve, reject) => {
-     exec(cmd, fsPathDict,(error:NodeJS.ErrnoException, stdout:string, stderr:string) => {
+        exec(cmd, 
+             fsPathDict, 
+             (error:NodeJS.ErrnoException, stdout:string, stderr:string) => {
+        
         let result = {'passed': false, 'stdout':"", 'stderr':"", 'exitcode':""};      
         if (error) {
             result.passed = false;
