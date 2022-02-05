@@ -160,14 +160,10 @@ export const generateDriver =
         return Promise.resolve(null);
     }    
 
-    firstPart += driverContents.slice(insertLocation + parentFiles.length, 
-                                      secondInsertLocation).join("\n");
+    firstPart += driverContents.slice(insertLocation + parentFiles.length, secondInsertLocation).join("\n");
   
-    const secondPart = driverContents.slice(secondInsertLocation, 
-                                            driverContents.length).join("\n");    
-
+    const secondPart          = driverContents.slice(secondInsertLocation, driverContents.length).join("\n");    
     const finalDriverContents = firstPart + testPairs + secondPart;
-  
     return await writeLocalFile(finalDriverContents, "unit_test_driver.cpp");                        
 };
 
@@ -185,10 +181,17 @@ export const cleanup = async function() {
 
 
 export const execShellCommand =
- async function(cmd:string, fsPathDict:Object={}) : Promise<any> {
+ async function(cmd: string, fsPathDict: Object={}, timeout?:string) : Promise<any> {
     
     const exec = require('child_process').exec;
     
+    console.log(timeout);
+    if (timeout) {
+        console.log("HERE");
+        cmd = "timeout --preserve-status " + timeout + " " + cmd;
+    }
+    console.log(cmd);
+
     return new Promise((resolve, reject) => {
         exec(cmd, 
              fsPathDict, 

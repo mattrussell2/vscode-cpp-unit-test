@@ -15,6 +15,7 @@ void test_fail() {
 }
 
 void test_fail_valgrind() {
+    std::cout << "Hello world!" << std::endl;
     int* x = new int[100];
 }
 

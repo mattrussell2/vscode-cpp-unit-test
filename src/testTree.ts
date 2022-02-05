@@ -5,7 +5,7 @@ import { join } from 'path';
 import { execShellCommand, getCwdUri, getExecutableFileName, 
          getTimeoutTime, getValgrindTimeoutTime, writeLocalFile, 
          getRunWithValgrind, getValgrindFlags } from './driverUtils';
-import { existsSync, unlinkSync } from 'fs';
+import { existsSync, unlinkSync, readFileSync } from 'fs';
 
 const textDecoder = new TextDecoder('utf-8');
 
@@ -99,83 +99,82 @@ export class TestCase {
     constructor(
         private readonly name: String,       
         public generation: number,
-        private passed: boolean = true    
+        private passed?: boolean
     ) {
-        this.passed = false;
+         this.passed = false;
     }
 
     getLabel() {
         return `${this.name}`;
     }
+    
+    private setFail(report: vscode.TestMessage, item: vscode.TestItem, opt: vscode.TestRun, duration: number) : void {                               
+        report.location = new vscode.Location(item.uri!, item.range!);
+        opt.failed(item, report, duration);
+    }
+    
+    private reportFail(test: any, timeouttime: string,
+                       item: vscode.TestItem, options: vscode.TestRun, duration: number) : void {
+                        //report: string, item: vscode.TestItem, duration: number, options: vscode.TestRun) : void {        
+        const stdoutHead = "stdout\n------\n";
+        const stderrHead = "\nstderr\n------\n";
 
-    async run(item: vscode.TestItem, options: vscode.TestRun): Promise<void> {
-        const start = Date.now();    
+        let failMessage : string;
+        if (test.exitcode === 143) { /* timed out */            
+            failMessage = stdoutHead + test.stdout +
+                          stderrHead + "test timed out - (took >" + timeouttime + " seconds)";                              
+        }else {                                              
+                failMessage = stdoutHead + test.stdout + stderrHead + test.stderr;
+        }        
+        this.setFail(new vscode.TestMessage(failMessage), item, options, duration);
+    }
+
+    async run(item: vscode.TestItem, options: vscode.TestRun) : Promise<void> {
+        
         if (!vscode.workspace.workspaceFolders) {
             vscode.window.showInformationMessage('No folder or workspace opened');
             return;
         }
-        let wsFolderUri = vscode.workspace.workspaceFolders[0].uri.fsPath;
-        let execPath = join(wsFolderUri, getExecutableFileName());      
+       
+        const timeouttime  = getTimeoutTime().toString();
+        const valgrindtime = getValgrindTimeoutTime().toString();               
+        const execPath     = join(getCwdUri().fsPath, getExecutableFileName());      
 
-        let timeouttime = getTimeoutTime().toString();
-        let valgrindtimeouttime = getValgrindTimeoutTime().toString();
-        let result = await execShellCommand('timeout --preserve-status ' + timeouttime + ' ' +
-                                             execPath + ' ' + this.name);   
-        const duration = Date.now() - start;
-        if (!result.passed) {                   
-            let message = new vscode.TestMessage("");            
-            if (result.exitcode === 143) {
-                message = new vscode.TestMessage("stdout: " + result.stdout +
-                                                 "\n stderr: code timed out (>" + timeouttime + 
-                                                 "s to run) while running test");
-            }else {                                              
-                message = new vscode.TestMessage("stdout: " + result.stdout + "\n stderr: " +   
-                                                 result.stderr);                                     
-            }
-            message.location = new vscode.Location(item.uri!, item.range!);
-            options.failed(item, message, duration);
-        } else {      
-            let valgrindResult = null; 
-            if (getRunWithValgrind()) {                
-                valgrindResult = await execShellCommand('timeout --preserve-status ' + 
-                                                        valgrindtimeouttime + ' valgrind ' + 
-                                                        getValgrindFlags() + ' --error-exitcode=1 ' 
-                                                        + execPath + ' ' + this.name);                                
-                if (!valgrindResult.passed) {
-                    let message = new vscode.TestMessage("");
-                    if (valgrindResult.exitcode === 143) {
-                        message = new vscode.TestMessage("stdout: " + valgrindResult.stdout + 
-                                                        "\n stderr: valgrind timed out (>" + 
-                                                        valgrindtimeouttime + 
-                                                        "s to run while running test");
-                    }else {                             
-                        message = new vscode.TestMessage("stdout: " + valgrindResult.stdout + 
-                                                        "\n stderr: " + valgrindResult.stderr); 
-                    }
-                    message.location = new vscode.Location(item.uri!, item.range!);
-                    options.failed(item, message, duration);
+        const start        = Date.now();    
+        const result       = await execShellCommand(execPath + ' ' + this.name, {}, timeouttime);   
+        let duration       = Date.now() - start;
+
+        if (result.passed) {
+            this.passed = true;
+
+            // run the diff test, if a file to diff exists
+            const diffFilePath = join(getCwdUri().fsPath, 'stdout/' + this.name);  
+            if (existsSync(diffFilePath)) {
+                const diffFile = readFileSync(diffFilePath).toString('utf-8');                    
+                if (diffFile !== result.stdout) {                       
+                    this.setFail(vscode.TestMessage.diff("diff failed!\n------------\n", result.stdout, diffFile),
+                                 item, options, duration);
+                    this.passed = false;
                 }
             }
-            if ((getRunWithValgrind() && valgrindResult.passed) || !getRunWithValgrind()) {         
-                const testFilePath = join(wsFolderUri, 'stdout/' +  this.name);                
-                if (existsSync(testFilePath)) {
-                    await writeLocalFile(result.stdout, 'tmp');
-                    let diffResult = await execShellCommand('diff ' + wsFolderUri + '/tmp ' +
-                                                             wsFolderUri + '/stdout/' + this.name);
-                    if (!diffResult.passed) {
-                        let message = new vscode.TestMessage("diff failed! \n" + diffResult.stderr 
-                                                            + '\n' + diffResult.stdout); 
-                        message.location = new vscode.Location(item.uri!, item.range!);
-                        options.failed(item, message, duration); 
-                    }else {                    
-                        options.passed(item, duration);
-                    } 
-                    unlinkSync(wsFolderUri + '/tmp');
+
+            // run the valgrind test, if user has set the option (is set to true by default)
+            if (getRunWithValgrind()) {                                
+                const valgrindResult = await execShellCommand('valgrind ' + getValgrindFlags() + ' --error-exitcode=1' +
+                                                              ' ' + execPath + ' ' + this.name, {}, valgrindtime);                                
+                duration = Date.now() - start;
+                if (!valgrindResult.passed) {                                                 
+                    this.reportFail(valgrindResult, valgrindtime, item, options, duration); 
+                    this.passed = false;
                 }
-                else {                
-                    options.passed(item, duration);                
-                }                                    
-            }
-        } 
+            }                                       
+        }else {
+            this.reportFail(result, timeouttime, item, options, duration);     
+        }
+
+        // possible that the 'main' test passed, but the valgrind/diff tests didn't.
+        if (this.passed) {
+            options.passed(item, duration);          
+        }
     }
-}  
+}
