@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 
+
 void test_pass() {
     assert(0 == 0);
 }
@@ -51,7 +52,7 @@ void block_commented_test() {
 //    std::cout << "don't run me";
 //}
 
-void timeout_test() { 
-    std::cout << "testing" << std::endl;        
-    while(true) {}
+void timeout_test() {
+    std::cout << "testing" << std::endl;
+    while (true) {}
 }
