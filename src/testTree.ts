@@ -152,7 +152,7 @@ export class TestCase {
             if (existsSync(diffFilePath)) {
                 const diffFile = readFileSync(diffFilePath).toString('utf-8');                    
                 if (diffFile !== result.stdout) {                       
-                    this.setFail(vscode.TestMessage.diff("diff failed!\n------------\n", result.stdout, diffFile),
+                    this.setFail(vscode.TestMessage.diff("diff failed!\n------------\n", diffFile,  result.stdout),
                                  item, options, duration);
                     this.passed = false;
                 }

@@ -3,7 +3,7 @@
     "displayName": "C++ Unit Testing Framework",
     "description": "C++ Unit Testing Framework",
     "enableApiProposals": false,
-    "version": "0.3.9",
+    "version": "0.4.1",
     "publisher": "AutumnMoon",
     "icon": "images/icon.png",
     "engines": {
@@ -58,7 +58,7 @@
                     "type": "integer",
                     "default": "60",
                     "description": "Max time per valgrind test (in seconds)."
-                },                
+                },
                 "cpp-unit-test.valgrind.runWithValgrind": {
                     "type": "boolean",
                     "default": "true",
@@ -68,7 +68,7 @@
                     "type": "string",
                     "default": "--track-origins=yes --leak-check=full --show-leak-kinds=all",
                     "description": "options for valgrind - default is: `--track-origins=yes --leak-check=full --show-leak-kinds=all`. NOTE: Valgrind is also run with --error-exitcode=1; this is not optional"
-                }                 
+                }
             }
         }
     },
@@ -88,7 +88,10 @@
         "url": "https://www.github.com/mattrussell2/vscode-cpp-unit-test"
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+        "vscode:prepublish": "npm run esbuild-base -- --minify",
+        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=./out/extension.js --external:vscode --format=cjs --platform=node",
+        "esbuild": "npm run esbuild-base -- --sourcemap",
+        "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
         "compile": "tsc -p ./",
         "lint": "eslint . --ext .ts,.tsx",
         "watch": "tsc -watch -p ./",
@@ -100,6 +103,7 @@
         "@types/node": "^12.12.0",
         "@typescript-eslint/eslint-plugin": "^4.16.0",
         "@typescript-eslint/parser": "^4.16.0",
+        "esbuild": "^0.14.35",
         "eslint": "^7.21.0",
         "typescript": "^4.2.2",
         "vscode-dts": "^0.3.1"

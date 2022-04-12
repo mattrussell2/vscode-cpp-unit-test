@@ -57,6 +57,10 @@ export function getMakefileTarget() : string {
     return getConfiguration('makefile')["targetName"];    
 }
 
+// export function getUseExternC() : boolean {
+//     return getBoolConfiguration('build')['useExternC'];
+// }
+
 export const writeLocalFile = async function(filecontents:string, fName:string) {   
     const fileUri = getFileUri(getCwdUri(), fName);
     var enc = new TextEncoder();
@@ -145,9 +149,16 @@ export const generateDriver =
     });   
 
     let firstPart = driverContents.slice(0, insertLocation).join("\n") + "\n";
+    
+    // if (getUseExternC()) {
+    //     firstPart += 'extern \"C\" {\n';
+    // }
     parentFiles.forEach(file => {       
         firstPart += `    #include "` + file + `"\n`;       
-    });    
+    }); 
+    // if (getUseExternC()) {
+    //     firstPart += '}\n';
+    // }   
   
     let secondInsertLocation = -1;
     driverContents.forEach((line, index) => {
