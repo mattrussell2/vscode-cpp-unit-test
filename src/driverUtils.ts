@@ -57,6 +57,7 @@ export function getMakefileTarget() : string {
     return getConfiguration('makefile')["targetName"];    
 }
 
+
 // export function getUseExternC() : boolean {
 //     return getBoolConfiguration('build')['useExternC'];
 // }
