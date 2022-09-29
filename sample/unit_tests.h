@@ -8,7 +8,7 @@ void test_pass() {
 
 void test_pass_1() {
     int* x = new int[100];
-    delete] x;
+    delete[] x;
 }
 
 void test_fail() {
