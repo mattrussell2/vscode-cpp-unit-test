@@ -39,7 +39,7 @@ export async function activate(context: vscode.ExtensionContext) {
         const runMake = async function() : Promise<string> {   
             
             let compileDriverResult = 
-                await execShellCommand('make unit_test_driver.o -o ' + getDriverFileName(),                
+                await execShellCommand('make ' + getDriverFileName(),                
                                        { cwd: getCwdUri().fsPath  });                                       
 
             if (!compileDriverResult.passed) {                                

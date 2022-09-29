@@ -112,4 +112,4 @@ PS: Many thanks to [https://github.com/microsoft/vscode-extension-samples](https
 
 ## Changelog
 ### 0.4.2
- - updated compilation process to run `make unit_test_driver.o -o driverfilename` so the `Makefile` will be used rather than forcing `clang++`
+ - updated compilation process to run `make unit_test_driver.o` so the `Makefile` will be used rather than forcing `clang++`
