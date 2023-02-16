@@ -1,6 +1,9 @@
 # vscode-cpp-unit-test
 A simple and sweet VSCode extension to unit test C++ code.
 
+https://user-images.githubusercontent.com/26848038/219488705-0154448f-5035-40a8-be11-531aed88424e.mov
+
+
 ## Setup
 To use the extension, you'll need to:
 1)  Create a unit_tests.h file
