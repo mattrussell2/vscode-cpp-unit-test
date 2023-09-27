@@ -34,7 +34,11 @@ export const parseTestsFile = (text: string, events: {
 
         const heading = headingRe.exec(line);    
         if (heading) {      
-            const headingname = heading[0];      
+            let headingname = heading[0].trim(); 
+            if (headingname.endsWith('*/')) {
+                headingname = headingname.slice(0, headingname.length - 2);
+                headingname = headingname.trim();
+            } 
             const range = new vscode.Range(new vscode.Position(lineNo, 0), new vscode.Position(lineNo, line.length));
             events.onHeading(range, headingname, headingname.length);
         }

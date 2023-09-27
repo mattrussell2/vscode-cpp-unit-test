@@ -75,8 +75,11 @@ export class TestFile {
             },
 
             onHeading: (range, name, depth) => {
-                ascend(depth);
-                const parent = ancestors[ancestors.length - 1];
+                // always ascend to the top level for each new group. 
+                // will not allow nested subgroups, but probably for the best. 
+                // changed from const parent = ancestors[ancestors.length - 1]; 
+                // 9/27/2023 mrussell
+                const parent = ancestors[0]; 
                 const id = `${item.uri}/${name}`;
 
                 const thead = controller.createTestItem(id, name, item.uri);
