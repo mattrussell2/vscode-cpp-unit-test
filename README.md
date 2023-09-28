@@ -105,7 +105,7 @@ You can also create test groups with a comment above the first test in a group a
 
 ![image](./images/test_groups.png)
 
-Test groups are hierarchical - each group will run all groups below it. If you want to create more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver; also, each test function name even across multiple files must be unique. When running test groups or all tests from all files, the code will be compiled only once.
+Each group will run all tests below it (other groups excluded). If you want to create even more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver automatically; also, each test function name even across multiple files must be unique. When running test groups or all tests from all files, the code will be compiled only once.
 
 That's it! Happy testing :)
 
@@ -114,5 +114,7 @@ Matt
 PS: Many thanks to [https://github.com/microsoft/vscode-extension-samples](https://github.com/microsoft/vscode-extension-samples) for having some great examples to work from.
 
 ## Changelog
+### 0.4.5
+ - test group naming fixed, and unhierarchicalized the groups. 
 ### 0.4.2
  - updated compilation process to run `make unit_test_driver.o` so the `Makefile` will be used rather than forcing `clang++`
