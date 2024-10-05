@@ -103,7 +103,7 @@ You can also create test groups with a comment above the first test in a group a
 
 (A regex is looking for the phrase ```TEST GROUP```).
 
-![image](./images/test_groups.png)
+![image](./images/test_groups~2.png)
 
 Each group will run all tests below it (other groups excluded). If you want to create even more distinct test groups, you can create any number of files named XXX_tests.h, each of which has testing functions. These will be able to be run independently of one another. Note that each such file in your workspace will be ```#include```d in the testing driver automatically; also, each test function name even across multiple files must be unique. When running test groups or all tests from all files, the code will be compiled only once.
 
