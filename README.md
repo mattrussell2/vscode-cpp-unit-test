@@ -1,3 +1,6 @@
+<img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/e43bceee-c073-48c8-94bd-6a1e646a320e" />
+
+
 # vscode-cpp-unit-test
 A simple and sweet VSCode extension to unit test C++ code.
 
