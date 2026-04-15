@@ -1,4 +1,4 @@
-<img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/e43bceee-c073-48c8-94bd-6a1e646a320e" />
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19600227.svg)](https://doi.org/10.5281/zenodo.19600227)
 
 
 # vscode-cpp-unit-test
